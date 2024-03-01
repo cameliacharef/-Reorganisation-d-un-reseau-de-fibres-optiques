@@ -1,7 +1,7 @@
 CC: gcc
 FLAGS: -Wall
 OBJECTS:ArbreQuat.o Chaine.o Hachage.o SVGwriter.o
-#PROGRAMS : 
+PROGRAMS :
 
 #all: $(PROGRAMS)
 
@@ -21,4 +21,4 @@ SVGwriter.o: SVGwriter.c SVGwriter.h
 	$(CC) $(FLAGS) -c -o $@ $<
 
 clean:
-	rm -rf $(OBJECTS) #$(PROGRAMS)
+	rm -rf $(OBJECTS) $(PROGRAMS)
