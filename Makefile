@@ -3,10 +3,10 @@ FLAGS: -Wall
 OBJECTS:ArbreQuat.o Chaine.o Hachage.o SVGwriter.o
 PROGRAMS : test
 
-all: $(PROGRAMS)
+all: test
 
 #main: $(OBJECTS)
-	#$(CC) $(FLAGS) -o $@ $^
+#$(CC) $(FLAGS) -o $@ $^
 
 ArbreQuat.o: ArbreQuat.c ArbreQuat.h
 	$(CC) $(FLAGS) -c -o $@ $<
