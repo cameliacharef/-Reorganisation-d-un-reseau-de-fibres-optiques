@@ -20,5 +20,11 @@ Hachage.o: Hachage.c Hachage.h
 SVGwriter.o: SVGwriter.c SVGwriter.h
 	$(CC) $(FLAGS) -c -o $@ $<
 
+test: test.o Chaine.o 
+	$(CC) $(CFLAGS) -o $@ $^ 
+
+test.o: test.c 
+	$(CC) $(CFLAGS) -c test.c 
+
 clean:
 	rm -rf $(OBJECTS) $(PROGRAMS)
