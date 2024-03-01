@@ -6,7 +6,7 @@ OBJECTS:ArbreQuat.o Chaine.o Hachage.o SVGwriter.o
 #all: $(PROGRAMS)
 
 #main: $(OBJECTS)
-	$(CC) $(FLAGS) -o $@ $^
+	#$(CC) $(FLAGS) -o $@ $^
 
 ArbreQuat.o: ArbreQuat.c ArbreQuat.h
 	$(CC) $(FLAGS) -c -o $@ $<
@@ -20,5 +20,5 @@ Hachage.o: Hachage.c Hachage.h
 SVGwriter.o: SVGwriter.c SVGwriter.h
 	$(CC) $(FLAGS) -c -o $@ $<
 
-clean: 
+clean:
 	rm -rf $(OBJECTS) #$(PROGRAMS)
