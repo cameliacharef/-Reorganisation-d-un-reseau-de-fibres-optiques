@@ -52,4 +52,6 @@ void SVGline(SVGwriter *svg, double xa, double ya, double xb, double yb);
 /* Ferme le fichier */
 void SVGfinalize(SVGwriter *svg);
 
+void afficheChaineSVG(Chaines *C, char* nomInstance);
+
 #endif
