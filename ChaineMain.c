@@ -2,6 +2,7 @@
 #include <stdlib.h> 
 #include <assert.h>
 
+#include "SVGwriter.h"
 #include "Chaine.h"
 
 int main(int argc, char** argv) {
@@ -19,7 +20,7 @@ int main(int argc, char** argv) {
         return 0; 
     }
 
-    fichier = fopen(argv[1], "w"); //ecriture_chaine.txt
+    fichier = fopen(argv[1], "w"); 
     if (fichier == NULL) {
         printf("Error opening file\n");
         return 1;
@@ -27,8 +28,12 @@ int main(int argc, char** argv) {
     ecrireChaines(chaines, fichier);
 
     fclose(fichier);
+
+    //Creation de la page html : affichage_chaine.html
+    afficheChainesSVG(chaines, "affichage_chaine");
+
+
     liberer_Chaines(chaines);
 
     return 0;
 }
-
