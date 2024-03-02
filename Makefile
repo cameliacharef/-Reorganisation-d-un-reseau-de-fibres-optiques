@@ -5,8 +5,10 @@ PROGRAMS : ChaineMain
 
 all: $(PROGRAMS)
 
-ChaineMain: ChaineMain.o SVGwriter.o
+ChaineMain: ChaineMain.o Chaine.o SVGwriter.o
 	#$(CC) $(FLAGS) -o $@ $^
+
+ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o
 
 ArbreQuat.o: ArbreQuat.c
 	$(CC) $(FLAGS) -c -o $@ $^
