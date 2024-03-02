@@ -4,7 +4,7 @@
 
 #include "Chaine.h"
 
-int main() {
+int main(int argc, char** argv) {
     FILE * fichier = fopen("00014_burma.cha", "r"); 
     if (fichier == NULL) {
         printf("Error opening file\n");

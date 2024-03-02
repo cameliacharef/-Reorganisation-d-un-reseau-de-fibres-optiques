@@ -1,7 +1,7 @@
-CC: gcc
-FLAGS: -Wall
-OBJECTS:ArbreQuat.o Chaine.o ChaineMain.o Hachage.o ReconstitueReseau.o Reseau.o SVGwriter.o
-PROGRAMS : ChaineMain ReconstitueReseau
+CC = gcc
+FLAGS = -Wall
+OBJECTS = ArbreQuat.o Chaine.o ChaineMain.o Hachage.o ReconstitueReseau.o Reseau.o SVGwriter.o
+PROGRAMS = ChaineMain ReconstitueReseau
 
 all: $(PROGRAMS)
 
