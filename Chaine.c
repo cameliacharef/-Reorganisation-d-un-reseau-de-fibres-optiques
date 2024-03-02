@@ -186,6 +186,25 @@ void inserer_cellChaine(CellChaine *chaine, int numero, CellPoint *point) {
 
 }*/
 
+CellPoint * lecturePoints(CellPoint * points, int nb_points, FILE *f) {
+    double x, y;
+    for (int i = 0; i < nb_points; i++) {
+        fscanf(f, "%lf %lf ", &x, &y);
+        points = inserer_point(points, x, y);
+    }
+    return points;
+}
+
+CellChaine * lectureChaine(CellChaine * chaine, FILE *f) {
+    int numero_chaine, nb_points;
+    fscanf(f, "%d %d ", &numero_chaine, &nb_points);
+    CellPoint * points = NULL;
+    points = lecturePoints(points, nb_points, f);
+    chaine = inserer_cellChaine(chaine, numero_chaine, points);
+    return chaine;
+}
+
+
 Chaines * lectureChaines(FILE *f){
     assert(f != NULL);
     char buffer[256];
@@ -232,6 +251,31 @@ Chaines * lectureChaines(FILE *f){
     Chaines * chaines = creer_Chaines(Gamma, NbChain, Chaine);
     return chaines;
 }
+
+void liberer_cellPoint(CellPoint *point) {
+    while (point != NULL) {
+        CellPoint * temp = point; 
+        point = point->suiv; 
+        free(temp); 
+    }
+}
+
+void liberer_cellChaine(CellChaine *chaine) {
+    while (chaine != NULL) {
+        liberer_cellPoint(chaine->points);
+        CellChaine * temp = chaine; 
+        chaine = chaine->suiv; 
+        free(temp); 
+    }
+}
+
+void liberer_Chaines(Chaines *chaines) {
+    if (chaines != NULL) {
+        liberer_cellChaine(chaines->chaines); 
+        free(chaines); 
+    }
+}
+
 
 double longueurPoint(CellPoint* pt){
     if(nombre_points(c->points)<2){
