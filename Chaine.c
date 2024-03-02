@@ -200,6 +200,7 @@ double longueurPoint(CellPoint* pt){
     CellPoint *cour=pt;
     while(cour->suiv){
         s+=sqrt(pow(cour->suiv->x-cour->x,2)+pow(cour->suiv->y-cour->y,2));
+        cour=cour->suiv;
     }
     return s;
 }
@@ -212,6 +213,7 @@ double longueurChaine(CellChaine *c){
     CellChaine *cour=c;
     while(cour){
         s+=longueurPoint(c->points);
+        cour=cour->suiv;
     }
     return s;
 }
@@ -227,3 +229,14 @@ double longueurTotale(Chaines *C){
     return s;
 }
 
+int comptePointsTotal(Chaines *C){
+    int s=0;
+    for(int i =0; i<C->nbChaines;i++){
+        CellChaine *tmp=C->chaines[i];
+        while(tmp){
+            s+=nombre_points(tmp->points);
+            tmp=tmp->suiv;
+        }
+    }
+    return s;
+}
