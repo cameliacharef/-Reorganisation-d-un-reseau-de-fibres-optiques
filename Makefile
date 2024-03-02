@@ -6,19 +6,19 @@ PROGRAMS = ChaineMain ReconstitueReseau
 all: $(PROGRAMS)
 
 ChaineMain: ChaineMain.o Chaine.o SVGwriter.o
-	#$(CC) $(FLAGS) -o $@ $^
+	$(CC) $(FLAGS) -o $@ $^ -lm
 
 ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o
-	#$(CC) $(FLAGS) -o $@ $^
+	$(CC) $(FLAGS) -o $@ $^ -lm
 
 ArbreQuat.o: ArbreQuat.c
 	$(CC) $(FLAGS) -c -o $@ $^
 
 Chaine.o : Chaine.c
-	$(CC) $(FLAGS) -c -o $@ $^
+	$(CC) $(FLAGS) -c -o $@ $^ -lm
 
 ChaineMain.o: ChaineMain.c
-	$(CC) $(FLAGS) -c -o $@ $^
+	$(CC) $(FLAGS) -c -o $@ $^ -lm
 
 Hachage.o: Hachage.c
 	$(CC) $(FLAGS) -c -o $@ $^

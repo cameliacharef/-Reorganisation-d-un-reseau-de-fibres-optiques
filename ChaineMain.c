@@ -4,7 +4,6 @@
 
 #include "SVGwriter.h"
 #include "Chaine.h"
-#include "SVGwriter.h"
 
 
 int main(int argc, char** argv) {
@@ -18,7 +17,7 @@ int main(int argc, char** argv) {
     fclose(fichier);
 
     if(argc != 2){
-        printf("Il faut 1 argument : nom_du_fichier\n");
+        printf("Il faut 1 argument : nom_du_fichier\n"); // fichier ecriture_chaine.txt
         return 0; 
     }
 
@@ -34,6 +33,8 @@ int main(int argc, char** argv) {
     //Creation de la page html : affichage_chaine.html
     afficheChainesSVG(chaines, "affichage_chaine");
 
+    printf("La longueure physique totale des chaines est de : %.2f\n", longueurTotale(chaines));
+    printf("Le nombre total des points est de : %d points\n", comptePointsTotal(chaines));
 
     liberer_Chaines(chaines);
 

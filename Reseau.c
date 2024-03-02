@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "SVGwriter.h"
 
-Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){}
+/*Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){}
 Reseau* reconstitueReseauListe(Chaines *C){}
 void ecrireReseau(Reseau *R, FILE *f){}
 int nbLiaisons(Reseau *R){}
@@ -36,3 +36,4 @@ void afficheReseauSVG(Reseau *R, char* nomInstance){
     }
     SVGfinalize(&svg);
 }
+*/
