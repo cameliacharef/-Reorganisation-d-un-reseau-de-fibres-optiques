@@ -29,19 +29,13 @@ double longueurChaine(CellChaine *c);
 double longueurTotale(Chaines *C);
 int comptePointsTotal(Chaines *C);
 
-//rajoutée
+// Les fonctions rajoutées
 CellPoint * creer_cellPoint(double x, double y);
-void afficher_cellPoint(CellPoint* point);
 CellChaine * creer_cellChaine(int numero, CellPoint * points);
 int nombre_points(CellPoint * points);
-void afficher_cellChaine(CellChaine * chaine);
 Chaines * creer_Chaines(int gamma, int nbChaines, CellChaine * chaines);
-void afficher_Chaines(Chaines * chaines);
 void inserer_point(CellPoint * point, double x, double y);
 void inserer_cellChaine(CellChaine * chaine, int numero, CellPoint * point);
-double longueurPoint(CellPoint* pt);
-
-
 void liberer_cellPoint(CellPoint *point);
 void liberer_cellChaine(CellChaine *chaine);
 void liberer_Chaines(Chaines *chaines);
