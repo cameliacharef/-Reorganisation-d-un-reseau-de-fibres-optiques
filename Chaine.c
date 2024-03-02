@@ -192,5 +192,38 @@ Chaines * lectureChaines(FILE *f){
     return chaines;
 }
 
+double longueurPoint(CellPoint* pt){
+    if(nombre_points(c->points)<2){
+        return 0.0;
+    }
+    double s=0.0;
+    CellPoint *cour=pt;
+    while(cour->suiv){
+        s+=sqrt(pow(cour->suiv->x-cour->x,2)+pow(cour->suiv->y-cour->y,2));
+    }
+    return s;
+}
 
+double longueurChaine(CellChaine *c){
+    if(!c){
+        return 0.0;
+    }
+    double s=0.0;
+    CellChaine *cour=c;
+    while(cour){
+        s+=longueurPoint(c->points);
+    }
+    return s;
+}
+
+double longueurTotale(Chaines *C){
+    if(C->nbChaines==0){
+        return 0.0;
+    }
+    double s=0.0;
+    for(int i=0;i<C->nbChaines;i++){
+        s+=longueurChaine(C->chaines[i]);
+    }
+    return s;
+}
 
