@@ -8,16 +8,16 @@ PROGRAMS :
 #main: $(OBJECTS)
 	#$(CC) $(FLAGS) -o $@ $^
 
-ArbreQuat.o: ArbreQuat.c ArbreQuat.h
+ArbreQuat.o: ArbreQuat.c
 	$(CC) $(FLAGS) -c -o $@ $<
 
-Chaine.o : Chaine.c Chaine.h
+Chaine.o : Chaine.c
 	$(CC) $(FLAGS) -c -o $@ $<
 
-Hachage.o: Hachage.c Hachage.h
+Hachage.o: Hachage.c
 	$(CC) $(FLAGS) -c -o $@ $<
 
-SVGwriter.o: SVGwriter.c SVGwriter.h
+SVGwriter.o: SVGwriter.c
 	$(CC) $(FLAGS) -c -o $@ $<
 
 clean:
