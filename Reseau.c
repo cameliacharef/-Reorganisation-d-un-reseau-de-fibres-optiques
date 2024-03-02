@@ -43,14 +43,54 @@ Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
     return noeud_recherche;
 }
 
+void inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
+    CellNoeud * nouveau_nd = (CellNoeud *)malloc(sizeof(CellNoeud));
+    
+}
 
+Reseau * reconstitueReseauListe(Chaines * C){
+    CellNoeud * V = NULL;
+    CellChaine * liste_chaine = C->chaines;
+
+    int num = 0;
+    while(liste_chaine){
+
+        CellPoint * liste_points = liste_chaine->points;
+        while(liste_points) {
+            while(V){
+                if(!(V->nd->x == liste_points->x && V->nd->y == liste_points->y)){
+                    if(V == NULL){
+                        V = (CellNoeud *)malloc(sizeof(CellNoeud));
+                        V->nd = (Noeud *)malloc(sizeof(Noeud));
+                        V->nd->x = liste_points->x;
+                        V->nd->y = liste_points->y;
+                        V->nd->num = num ;
+                        num++;
+
+                        V->nd->voisins = NULL; // !!!!!!!!!!!!!!
+
+                        V->suiv = NULL; 
+                    }
+                    else{
+                        
+                    }
+                }
+                V = V->suiv;
+            }
+
+            liste_points = liste_points->suiv;
+        }
+
+        liste_chaine = liste_chaine->suiv;
+    }
+}
 
 
 
 
 
 /*
-Reseau* reconstitueReseauListe(Chaines *C){}
+
 void ecrireReseau(Reseau *R, FILE *f){}
 int nbLiaisons(Reseau *R){}
 int nbCommodites(Reseau *R){}
