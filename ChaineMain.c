@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
         return 0; 
     }
 
-    fichier = fopen(argv[1], "w"); 
+    fichier = fopen(argv[1], "w"); //ecriture_chaine.txt
     if (fichier == NULL) {
         printf("Error opening file\n");
         return 1;
