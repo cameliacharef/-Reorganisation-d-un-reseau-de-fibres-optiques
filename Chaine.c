@@ -13,12 +13,6 @@ CellPoint * creer_cellPoint(double x, double y){
     return point;
 }
 
-void afficher_cellPoint(CellPoint* point){
-    if(point != NULL){
-        printf("%.2f %.2f ", point->x, point->y);
-    }
-}
-
 CellChaine * creer_cellChaine(int numero, CellPoint * points){
     CellChaine * chaine_points = (CellChaine *)malloc(sizeof(CellChaine));
     chaine_points->numero = numero;
@@ -32,16 +26,11 @@ int nombre_points(CellPoint * points){
     int nb = 0;
     while(points){
         nb = nb + 1;
+        points = points->suiv;
     }
     return nb;
 }
 
-void afficher_cellChaine(CellChaine * chaine){
-    if(chaine != NULL){
-        printf("%d %d ", chaine->numero, nombre_points(chaine->points));
-        afficher_cellPoint(chaine->points);
-    }
-}
 
 
 Chaines * creer_Chaines(int gamma, int nbChaines, CellChaine * cellchaines){
@@ -51,13 +40,6 @@ Chaines * creer_Chaines(int gamma, int nbChaines, CellChaine * cellchaines){
     chainesf->chaines = cellchaines;
 
     return chainesf;
-}
-
-void afficher_Chaines(Chaines * chaines){
-    if(chaines != NULL){
-        printf("NbChain: %d\nGamma: %d\n", chaines->nbChaines, chaines->gamma);
-        afficher_cellChaine(chaines->chaines);
-    }
 }
 
 void afficheChainesSVG(Chaines *C, char* nomInstance){
@@ -100,103 +82,91 @@ void afficheChainesSVG(Chaines *C, char* nomInstance){
     SVGfinalize(&svg);
 }
 
-/*void inserer_point(CellPoint * point, double x, double y){
+void inserer_point(CellPoint * point, double x, double y){
     CellPoint * new_point = creer_cellPoint(x, y);
     new_point->suiv = point;
     point = new_point;
-}*/
-void inserer_point(CellPoint * point, double x, double y) {
-    if (point == NULL) {
-        printf("Erreur : la liste de points est vide.\n");
-        return;
-    }
-    while (point->suiv != NULL) {
-        point = point->suiv;
-    }
-    CellPoint * nouveau_point = creer_cellPoint(x, y);
-    if (nouveau_point == NULL) {
-        printf("Erreur lors de la création du nouveau point.\n");
-        return;
-    }
-    point->suiv = nouveau_point;
-}
-void inserer_cellChaine(CellChaine *chaine, int numero, CellPoint *point) {
-    if (chaine == NULL) {
-        printf("Erreur : la liste de chaînes est vide.\n");
-        return;
-    }
-    while (chaine->suiv != NULL) {
-        chaine = chaine->suiv;
-    }
-    CellChaine *nouvelle_chaine = creer_cellChaine(numero, point);
-    if (nouvelle_chaine == NULL) {
-        printf("Erreur lors de la création de la nouvelle chaîne.\n");
-        return;
-    }
-    chaine->suiv = nouvelle_chaine;
 }
 
 
-/*void inserer_cellChaine(CellChaine * chaine, int numero, CellPoint * point){
+
+void inserer_cellChaine(CellChaine * chaine, int numero, CellPoint * point){
     CellChaine * new_chaine = creer_cellChaine(numero, point);
     new_chaine->suiv = chaine;
     chaine = new_chaine;
-}*/
+}
 
-Chaines * lectureChaines(FILE *f){
+Chaines *lectureChaines(FILE *f) {
+
     assert(f != NULL);
     char buffer[256];
-    int cpt = 0;
-
-    int NbChain ;
+    
+    // Lecture des deux premières lignes
+    int NbChain;
     int Gamma;
-
+    
     fgets(buffer, 256, f);
     sscanf(buffer, "NbChain: %d", &NbChain);
 
     fgets(buffer, 256, f);
     sscanf(buffer, "Gamma: %d", &Gamma);
 
-    CellChaine * nouvel_chaine = NULL;
-    while (fgets(buffer, 256, f)){
-        if (cpt > NbChain) // Arrêt de la lecture lorsque n lignes ont été lues
-            break;
-         
-        int numero_chaine;
-        int nb_points;
+    // Lecture des chaines
+ 
+    CellChaine *nouvel_chaine = NULL;
 
-        sscanf(buffer, "%d %d ", &numero_chaine, &nb_points);// lecture numero et nb points
+    for (int j =  0 ;  j < NbChain ; j++) {
 
-        
-        //creation de la liste de points 
-        CellPoint * nouveau_point = NULL;
-        for(int i = 0; i<nb_points; i++){
-            double x,y;
-            if (i == 0) { // premier point
-                sscanf(buffer, "%lf %lf ", &x, &y);
-                nouveau_point = creer_cellPoint(x, y);
-            } else {
-                sscanf(buffer, "%lf %lf ", &x, &y);
-                inserer_point(nouveau_point, x, y);
-            }
-        }
-        
-        //creation de la chaine avec numero 
-        if (cpt == 0) { // premiere chaine 
-            nouvel_chaine = creer_cellChaine(numero_chaine, nouveau_point);
-        } else {
-            inserer_cellChaine(nouvel_chaine, numero_chaine, nouveau_point);
+        int numero_chaine, nb_points;
+
+        fscanf(f, "%d %d ", &numero_chaine, &nb_points);
+
+        // Création de la liste de points
+        CellPoint *nouveau_point = NULL;
+        for (int i = 0; i < nb_points; i++) {
+            double x, y;
+            fscanf(f, "%lf %lf ", &x, &y);
+            
+            CellPoint *point = creer_cellPoint(x, y);
+            point->suiv = nouveau_point;
+            nouveau_point = point;
         }
 
+        CellChaine *chaine = creer_cellChaine(numero_chaine, nouveau_point);
+        chaine->suiv = nouvel_chaine;
+        nouvel_chaine = chaine;
         
-        cpt++;
     }
 
-    //creation de la structure Chaines
-
-    Chaines * chaines = creer_Chaines(Gamma, NbChain, nouvel_chaine);
+    // Création de la structure Chaines
+    Chaines* chaines = creer_Chaines(Gamma, NbChain, nouvel_chaine);
     return chaines;
 }
+
+void ecrireChaines(Chaines *C, FILE *f){
+    assert(f != NULL);
+
+    int gamma = C->gamma;
+    int nbChaines = C->nbChaines;
+    CellChaine * liste_chaine = C->chaines;
+
+    fprintf(f, "NbChain: %d\n", nbChaines);
+    fprintf(f, "Gamma: %d\n", gamma);
+
+    for(int i = 0; i < nbChaines; i++){
+        CellPoint * liste_points = liste_chaine->points;
+
+        fprintf(f, "%d %d ", liste_chaine->numero, nombre_points(liste_points));
+        
+
+        while(liste_points){
+            fprintf(f, "%.2f %.2f ", liste_points->x, liste_points->y);
+            liste_points = liste_points->suiv;
+        }
+        fprintf(f, "\n");
+        liste_chaine = liste_chaine->suiv;
+    }
+} 
 
 void liberer_cellPoint(CellPoint *point) {
     while (point != NULL) {
