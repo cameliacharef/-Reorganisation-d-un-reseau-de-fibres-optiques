@@ -41,4 +41,9 @@ void inserer_point(CellPoint * point, double x, double y);
 void inserer_cellChaine(CellChaine * chaine, int numero, CellPoint * point);
 double longueurPoint(CellPoint* pt);
 
+
+void liberer_cellPoint(CellPoint *point);
+void liberer_cellChaine(CellChaine *chaine);
+void liberer_Chaines(Chaines *chaines);
+
 #endif	
