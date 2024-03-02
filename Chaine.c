@@ -191,52 +191,57 @@ void afficheChainesSVG(Chaines *C, char* nomInstance){
 }
 
 
-double longueurPoint(CellPoint* pt){
-    if(nombre_points(c->points)<2){
-        return 0.0;
-    }
-    double s=0.0;
-    CellPoint *cour=pt;
-    while(cour->suiv){
-        s+=sqrt(pow(cour->suiv->x-cour->x,2)+pow(cour->suiv->y-cour->y,2));
-        cour=cour->suiv;
-    }
-    return s;
-}
-
 double longueurChaine(CellChaine *c){
-    if(!c){
+    if(nombre_points(c->points) < 2){
         return 0.0;
     }
-    double s=0.0;
-    CellChaine *cour=c;
-    while(cour){
-        s+=longueurPoint(c->points);
-        cour=cour->suiv;
+    double distance = 0.0;
+    CellPoint *courant = c->points;
+    while(courant->suiv){
+        distance += sqrt(pow(courant->suiv->x - courant->x, 2) + pow(courant->suiv->y - courant->y, 2));
+        courant = courant->suiv;
     }
-    return s;
+    return distance;
 }
 
 double longueurTotale(Chaines *C){
-    if(C->nbChaines==0){
+    if(!C){
         return 0.0;
     }
-    double s=0.0;
-    for(int i=0;i<C->nbChaines;i++){
-        s+=longueurChaine(C->chaines[i]);
+    if(C->nbChaines == 0){
+        return 0.0;
     }
-    return s;
+
+    double longueur = 0.0;
+    CellChaine *courant = C->chaines;
+
+    while(courant){
+        longueur += longueurChaine(C->chaines);
+        courant = courant->suiv;
+    }
+    return longueur;
 }
 
+/*double longueurTotale(Chaines *C){
+    if(C->nbChaines == 0){
+        return 0.0;
+    }
+    double longueur = 0.0;
+    for(int i = 0; i < C->nbChaines; i++){
+        longueur += longueurChaine(C->chaines[i]);
+    }
+    return longueur;
+}*/
+
 int comptePointsTotal(Chaines *C){
-    int s=0;
+    int nb_points = 0;
     for(int i =0; i<C->nbChaines;i++){
         CellChaine *tmp=C->chaines[i];
         while(tmp){
-            s+=nombre_points(tmp->points);
+            nb_points+=nombre_points(tmp->points);
             tmp=tmp->suiv;
         }
     }
-    return s;
+    return nb_points;
 }
 
