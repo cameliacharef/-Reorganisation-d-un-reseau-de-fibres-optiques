@@ -143,68 +143,6 @@ void inserer_cellChaine(CellChaine *chaine, int numero, CellPoint *point) {
     chaine = new_chaine;
 }*/
 
-/*Chaines * lectureChaines(FILE *f){
-    assert(f != NULL);
-    char buffer[256];
-    int NbChain;
-    int Gamma;
-    int nbPoints;
-    double x;
-    double y;
-
-
-    int cpt = 0;
-    fgets(buffer, 256, f);
-    sscanf(buffer, "NbChain: %d\nGamma: %d", &NbChain, &Gamma);
-    
-    CellChaine* chaine=malloc(sizeof(CellChaine));
-    chaine=NULL;
-    while(fgets(buffer, 256, f)){
-        if (cpt >= NbChain) 
-            break;
-        sscanf(buffer, "%d %d", &cpt, &nbPoints);
-
-        CellPoint* p=malloc(sizeof(CellPoint));
-        p=NULL;
-
-        for(int i = 0; i <= nbPoints; i++){
-            sscanf(buffer, "%.2f %.2f", &x, &y);
-            inserer_point(p, x, y);          
-        }
-
-        CellChaine* chaine=malloc(sizeof(CellChaine));
-        chaine=NULL;
-
-        inserer_cellChaine(chaine,cpt,p);
-        cpt++;
-    }
-
-
-    Chaines * chaines = creer_Chaines(Gamma, NbChain, chaine);
-
-    return chaines;     
-
-}*/
-
-CellPoint * lecturePoints(CellPoint * points, int nb_points, FILE *f) {
-    double x, y;
-    for (int i = 0; i < nb_points; i++) {
-        fscanf(f, "%lf %lf ", &x, &y);
-        points = inserer_point(points, x, y);
-    }
-    return points;
-}
-
-CellChaine * lectureChaine(CellChaine * chaine, FILE *f) {
-    int numero_chaine, nb_points;
-    fscanf(f, "%d %d ", &numero_chaine, &nb_points);
-    CellPoint * points = NULL;
-    points = lecturePoints(points, nb_points, f);
-    chaine = inserer_cellChaine(chaine, numero_chaine, points);
-    return chaine;
-}
-
-
 Chaines * lectureChaines(FILE *f){
     assert(f != NULL);
     char buffer[256];
@@ -234,7 +172,7 @@ Chaines * lectureChaines(FILE *f){
         CellPoint * nouveau_point = NULL;
         for(int i = 0; i<nb_points; i++){
             double x,y;
-            if (i == 0) {
+            if (i == 0) { // premier point
                 sscanf(buffer, "%lf %lf ", &x, &y);
                 nouveau_point = creer_cellPoint(x, y);
             } else {
@@ -244,7 +182,7 @@ Chaines * lectureChaines(FILE *f){
         }
         
         //creation de la chaine avec numero 
-        if (cpt == 0) {
+        if (cpt == 0) { // premiere chaine 
             nouvel_chaine = creer_cellChaine(numero_chaine, nouveau_point);
         } else {
             inserer_cellChaine(nouvel_chaine, numero_chaine, nouveau_point);
