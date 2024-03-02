@@ -2,6 +2,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <assert.h>
+#include "SVGwriter.h"
 
 CellPoint * creer_cellPoint(double x, double y){
     CellPoint * point = (CellPoint *)malloc(sizeof(CellPoint));
