@@ -219,7 +219,7 @@ Chaines * lectureChaines(FILE *f){
     fgets(buffer, 256, f);
     sscanf(buffer, "Gamma: %d", &Gamma);
 
-    CellChaine * Chaine = NULL;
+    CellChaine * nouvel_chaine = NULL;
     while (fgets(buffer, 256, f)){
         if (cpt > NbChain) // Arrêt de la lecture lorsque n lignes ont été lues
             break;
@@ -229,26 +229,34 @@ Chaines * lectureChaines(FILE *f){
 
         sscanf(buffer, "%d %d ", &numero_chaine, &nb_points);// lecture numero et nb points
 
+        
         //creation de la liste de points 
         CellPoint * nouveau_point = NULL;
-        for(int i = 0; i<nb_points - 1; i++){
+        for(int i = 0; i<nb_points; i++){
             double x,y;
-            sscanf(buffer, "%lf %lf ", &x, &y);
-            inserer_point(nouveau_point, x, y);
+            if (i == 0) {
+                sscanf(buffer, "%lf %lf ", &x, &y);
+                nouveau_point = creer_cellPoint(x, y);
+            } else {
+                sscanf(buffer, "%lf %lf ", &x, &y);
+                inserer_point(nouveau_point, x, y);
+            }
         }
-        double x,y;//le dernier point
-        sscanf(buffer, "%lf %lf", &x, &y);
-        inserer_point(nouveau_point, x, y);
-
+        
         //creation de la chaine avec numero 
-        inserer_cellChaine(Chaine, numero_chaine, nouveau_point);
+        if (cpt == 0) {
+            nouvel_chaine = creer_cellChaine(numero_chaine, nouveau_point);
+        } else {
+            inserer_cellChaine(nouvel_chaine, numero_chaine, nouveau_point);
+        }
 
+        
         cpt++;
     }
 
     //creation de la structure Chaines
 
-    Chaines * chaines = creer_Chaines(Gamma, NbChain, Chaine);
+    Chaines * chaines = creer_Chaines(Gamma, NbChain, nouvel_chaine);
     return chaines;
 }
 
