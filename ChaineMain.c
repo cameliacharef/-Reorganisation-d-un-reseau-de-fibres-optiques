@@ -3,6 +3,8 @@
 #include <assert.h>
 
 #include "Chaine.h"
+#include "SVGwriter.h"
+
 
 int main(int argc, char** argv) {
     FILE * fichier = fopen("00014_burma.cha", "r"); 
@@ -27,6 +29,11 @@ int main(int argc, char** argv) {
     ecrireChaines(chaines, fichier);
 
     fclose(fichier);
+
+    //Creation de la page html : affichage_chaine.html
+    afficheChainesSVG(chaines, "affichage_chaine");
+
+
     liberer_Chaines(chaines);
 
     return 0;

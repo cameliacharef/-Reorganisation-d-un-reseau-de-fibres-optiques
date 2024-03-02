@@ -33,4 +33,4 @@ SVGwriter.o: SVGwriter.c
 	$(CC) $(FLAGS) -c -o $@ $^
 
 clean:
-	rm -rf $(OBJECTS) $(PROGRAMS)
+	rm -rf $(OBJECTS) $(PROGRAMS) *.o

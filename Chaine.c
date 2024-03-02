@@ -1,8 +1,11 @@
-#include "Chaine.h"
+#include <math.h>
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <assert.h>
+
 #include "SVGwriter.h"
+#include "Chaine.h"
+
 
 CellPoint * creer_cellPoint(double x, double y){
     CellPoint * point = (CellPoint *)malloc(sizeof(CellPoint));
@@ -31,8 +34,6 @@ int nombre_points(CellPoint * points){
     return nb;
 }
 
-
-
 Chaines * creer_Chaines(int gamma, int nbChaines, CellChaine * cellchaines){
     Chaines * chainesf = (Chaines *)malloc(sizeof(Chaines));
     chainesf->gamma = gamma;
@@ -42,44 +43,28 @@ Chaines * creer_Chaines(int gamma, int nbChaines, CellChaine * cellchaines){
     return chainesf;
 }
 
-void afficheChainesSVG(Chaines *C, char* nomInstance){
-    int i;
-    double maxx=0,maxy=0,minx=1e6,miny=1e6;
-    CellChaine *ccour;
-    CellPoint *pcour;
-    double precx,precy;
-    SVGwriter svg;
-    ccour=C->chaines;
-    while (ccour!=NULL){
-        pcour=ccour->points;
-        while (pcour!=NULL){
-            if (maxx<pcour->x) maxx=pcour->x;
-            if (maxy<pcour->y) maxy=pcour->y;
-            if (minx>pcour->x) minx=pcour->x;
-            if (miny>pcour->y) miny=pcour->y;  
-            pcour=pcour->suiv;
-        }
-    ccour=ccour->suiv;
+void liberer_cellPoint(CellPoint *point) {
+    while (point != NULL) {
+        CellPoint * temp = point; 
+        point = point->suiv; 
+        free(temp); 
     }
-    SVGinit(&svg,nomInstance,500,500);
-    ccour=C->chaines;
-    while (ccour!=NULL){
-        pcour=ccour->points;
-        SVGlineRandColor(&svg);
-        SVGpoint(&svg,500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny)); 
-        precx=pcour->x;
-        precy=pcour->y;  
-        pcour=pcour->suiv;
-        while (pcour!=NULL){
-            SVGline(&svg,500*(precx-minx)/(maxx-minx),500*(precy-miny)/(maxy-miny),500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny));
-            SVGpoint(&svg,500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny));
-            precx=pcour->x;
-            precy=pcour->y;    
-            pcour=pcour->suiv;
-        }
-        ccour=ccour->suiv;
+}
+
+void liberer_cellChaine(CellChaine *chaine) {
+    while (chaine != NULL) {
+        liberer_cellPoint(chaine->points);
+        CellChaine * temp = chaine; 
+        chaine = chaine->suiv; 
+        free(temp); 
     }
-    SVGfinalize(&svg);
+}
+
+void liberer_Chaines(Chaines *chaines) {
+    if (chaines != NULL) {
+        liberer_cellChaine(chaines->chaines); 
+        free(chaines); 
+    }
 }
 
 void inserer_point(CellPoint * point, double x, double y){
@@ -87,8 +72,6 @@ void inserer_point(CellPoint * point, double x, double y){
     new_point->suiv = point;
     point = new_point;
 }
-
-
 
 void inserer_cellChaine(CellChaine * chaine, int numero, CellPoint * point){
     CellChaine * new_chaine = creer_cellChaine(numero, point);
@@ -168,28 +151,43 @@ void ecrireChaines(Chaines *C, FILE *f){
     }
 } 
 
-void liberer_cellPoint(CellPoint *point) {
-    while (point != NULL) {
-        CellPoint * temp = point; 
-        point = point->suiv; 
-        free(temp); 
+void afficheChainesSVG(Chaines *C, char* nomInstance){
+    double maxx=0,maxy=0,minx=1e6,miny=1e6;
+    CellChaine *ccour;
+    CellPoint *pcour;
+    double precx,precy;
+    SVGwriter svg;
+    ccour=C->chaines;
+    while (ccour!=NULL){
+        pcour=ccour->points;
+        while (pcour!=NULL){
+            if (maxx<pcour->x) maxx=pcour->x;
+            if (maxy<pcour->y) maxy=pcour->y;
+            if (minx>pcour->x) minx=pcour->x;
+            if (miny>pcour->y) miny=pcour->y;  
+            pcour=pcour->suiv;
+        }
+    ccour=ccour->suiv;
     }
-}
-
-void liberer_cellChaine(CellChaine *chaine) {
-    while (chaine != NULL) {
-        liberer_cellPoint(chaine->points);
-        CellChaine * temp = chaine; 
-        chaine = chaine->suiv; 
-        free(temp); 
+    SVGinit(&svg,nomInstance,500,500);
+    ccour=C->chaines;
+    while (ccour!=NULL){
+        pcour=ccour->points;
+        SVGlineRandColor(&svg);
+        SVGpoint(&svg,500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny)); 
+        precx=pcour->x;
+        precy=pcour->y;  
+        pcour=pcour->suiv;
+        while (pcour!=NULL){
+            SVGline(&svg,500*(precx-minx)/(maxx-minx),500*(precy-miny)/(maxy-miny),500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny));
+            SVGpoint(&svg,500*(pcour->x-minx)/(maxx-minx),500*(pcour->y-miny)/(maxy-miny));
+            precx=pcour->x;
+            precy=pcour->y;    
+            pcour=pcour->suiv;
+        }
+        ccour=ccour->suiv;
     }
-}
-
-void liberer_Chaines(Chaines *chaines) {
-    if (chaines != NULL) {
-        liberer_cellChaine(chaines->chaines); 
-        free(chaines); 
-    }
+    SVGfinalize(&svg);
 }
 
 
@@ -241,3 +239,4 @@ int comptePointsTotal(Chaines *C){
     }
     return s;
 }
+
