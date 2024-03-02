@@ -39,5 +39,6 @@ Chaines * creer_Chaines(int gamma, int nbChaines, CellChaine * chaines);
 void afficher_Chaines(Chaines * chaines);
 void inserer_point(CellPoint * point, double x, double y);
 void inserer_cellChaine(CellChaine * chaine, int numero, CellPoint * point);
+double longueurPoint(CellPoint* pt);
 
 #endif	
