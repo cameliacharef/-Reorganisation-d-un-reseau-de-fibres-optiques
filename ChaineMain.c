@@ -2,6 +2,7 @@
 #include <stdlib.h> 
 #include <assert.h>
 
+#include "SVGwriter.h"
 #include "Chaine.h"
 #include "SVGwriter.h"
 
@@ -38,4 +39,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
