@@ -150,13 +150,13 @@ void ecrireReseau(Reseau *R, FILE *f){
     }
 
     // Ecriture des liaisons l
-    CellNoeud * liste_noeud = R->noeuds;
+    liste_noeud = R->noeuds;
     for(int j = 0; j < nb_liaisons; j++){
 
         Noeud * noeud = liste_noeud->nd;
         CellNoeud * voisins = noeud->voisins;
         while (voisins){
-            fprintf(f, "l %d %d\n", voisins->nd->x, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
+            fprintf(f, "l %.2f %d\n", voisins->nd->x, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
             voisins = voisins->suiv;
         }
 
@@ -164,12 +164,12 @@ void ecrireReseau(Reseau *R, FILE *f){
     }
 
     // Ecrire les commodités k 
-    CellCommodite * liste_commodités = R->commodites;
+    CellCommodite * liste_commodites = R->commodites;
     for(int y = 0; y < nb_commodites; y++){
 
-        fprintf(f, "k %d %d\n", liste_commodités->extrA->num, liste_commodités->extrB->num);
+        fprintf(f, "k %d %d\n", liste_commodites->extrA->num, liste_commodites->extrB->num);
 
-        liste_commodités = liste_commodités->suiv;
+        liste_commodités = liste_commodites->suiv;
     }
     
 }
