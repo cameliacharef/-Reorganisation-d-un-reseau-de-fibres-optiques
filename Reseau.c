@@ -86,14 +86,47 @@ Reseau * reconstitueReseauListe(Chaines * C){
 }
 
 
+// A revoir !!!!!!!!
+int nbLiaisons(Reseau *R){
+    int total = 0;
+    CellNoeud * liste_noeud = R->noeuds;
 
+    // parcours liste noeud reseau 
+    while (liste_noeud){
+        Noeud * noeud = liste_noeud->nd;
+        CellNoeud * liste_voisins = noeud->voisins;
+
+        // parcours des voisins de chaque noeud 
+        while (liste_voisins){
+            total = total + 1 ; 
+            liste_voisins = liste_voisins->suiv;
+        }
+
+        liste_noeud = liste_noeud->suiv;
+    }
+
+    return total / 2; // 2 liaisons pour 2 meme noeud A-B et B-A
+}
+
+
+int nbCommodites(Reseau *R){
+    int total = 0;
+    CellCommodite * liste_commodites = R->commodites;
+
+    while(liste_commodites){
+        total = total + 1;
+        liste_commodites = liste_commodites->suiv;
+    }
+
+    return total;
+}
 
 
 /*
 
 void ecrireReseau(Reseau *R, FILE *f){}
-int nbLiaisons(Reseau *R){}
-int nbCommodites(Reseau *R){}
+
+
 */
 
 void afficheReseauSVG(Reseau *R, char* nomInstance){
