@@ -20,9 +20,12 @@ int main(int argc, char* argv[]){
 
   if(atoi(argv[2])==1){
     Reseau* R = reconstitueReseauListe(chaines);
+
+    /*Test de la question 1 de l'exercice 2*/
     Noeud* N1 = rechercheCreeNoeudListe(R,10.00,31.23);
+    printf("x = %.2f y = %.2f\n",N1->x,N1->y);
     Noeud* N2 = rechercheCreeNoeudListe(R,10.00,31.23);
-    Noeud* N3 = rechercheCreeNoeudListe(R,20.09,92.54);
+    printf("x = %.2f y = %.2f\n",N2->x,N2->y);
 
     int nbC = nbCommodites(R);
     int nbL = nbLiaisons(R);
