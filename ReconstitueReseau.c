@@ -31,6 +31,7 @@ int main(int argc, char* argv[]){
     Noeud* N2 = rechercheCreeNoeudListe(R,10.00,31.23);
     printf("x = %.2f y = %.2f\n",N2->x,N2->y);
 
+    /*Test de la question 1 de l'exercice 3*/
     int nbC = nbCommodites(R);
     int nbL = nbLiaisons(R);
     printf("Nombre de commodités : %d\nNombre de liaisons : %d\n",nbC,nbL);
