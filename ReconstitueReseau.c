@@ -19,7 +19,10 @@ int main(){
   Chaines *chaines = lectureChaines(fichier);
 
   if(argv[1]==1){
-
+    Reseau* R = NULL;
+    Noeud* N1 = rechercheCreeNoeudListe(R,0,3);
+    Noeud* N2 = rechercheCreeNoeudListe(R,0,3);
+    Noeud* N3 = rechercheCreeNoeudListe(R,10,3);
   }else if(argv[1]==2){    
     Reseau* R = reconstitueReseauListe(chaines);
   }else{
