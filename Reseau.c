@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <assert.h>
+
 #include "SVGwriter.h"
 #include "Chaine.h"
 #include "Reseau.h"
@@ -122,12 +123,59 @@ int nbCommodites(Reseau *R){
 }
 
 
-/*
+// REVOIR POUR ELIMINER LES DOUBLONS 
+void ecrireReseau(Reseau *R, FILE *f){
+    assert(f != NULL);
 
-void ecrireReseau(Reseau *R, FILE *f){}
+    int nbNoeuds = R->nbNoeuds;
+    int gamma = R->gamma;
+    int nb_liaisons = nbLiaisons(R);
+    int nb_commodites = nbCommodites(R);
+
+    // Ecriture 4 premieres lignes 
+
+    fprintf(f, "NbNoeuds: %d\n", nbNoeuds);
+    fprintf(f, "NbLiaisons: %d\n", nb_liaisons);
+    fprintf(f, "NbCommodites: %d\n", nb_commodites);
+    fprintf(f, "Gamma: %d\n", gamma);
+
+    // Ecriture des noeuds v
+    CellNoeud * liste_noeud = R->noeuds;
+    for(int i = 0; i < nbNoeuds; i++){
+
+        Noeud * noeud = liste_noeud->nd;
+        fprintf(f, "v %d %.6f %.6f\n", noeud->num, noeud->x, noeud->y);
+
+        liste_noeud = liste_noeud->suiv;
+    }
+
+    // Ecriture des liaisons l
+    CellNoeud * liste_noeud = R->noeuds;
+    for(int j = 0; j < nb_liaisons; j++){
+
+        Noeud * noeud = liste_noeud->nd;
+        CellNoeud * voisins = noeud->voisins;
+        while (voisins){
+            fprintf(f, "l %d %d\n", voisins->nd->x, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
+            voisins = voisins->suiv;
+        }
+
+        liste_noeud = liste_noeud->suiv;
+    }
+
+    // Ecrire les commodités k 
+    CellCommodite * liste_commodités = R->commodites;
+    for(int y = 0; y < nb_commodites; y++){
+
+        fprintf(f, "k %d %d\n", liste_commodités->extrA->num, liste_commodités->extrB->num);
+
+        liste_commodités = liste_commodités->suiv;
+    }
+    
+}
 
 
-*/
+
 
 void afficheReseauSVG(Reseau *R, char* nomInstance){
     CellNoeud *courN,*courv;
