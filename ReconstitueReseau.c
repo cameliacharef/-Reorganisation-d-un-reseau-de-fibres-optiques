@@ -21,6 +21,10 @@ int main(int argc, char* argv[]){
   if(atoi(argv[2])==1){
     Reseau* R = reconstitueReseauListe(chaines);
 
+    /*Erreur dans le test de la question 2 de l'exercice 2 :
+    nbNoeuds et gamma sont incroyablement très grands*/
+    printf("Nombre de noeuds = %d Gamma = %d\n",R->nbNoeuds,R->gamma);
+
     /*Test de la question 1 de l'exercice 2*/
     Noeud* N1 = rechercheCreeNoeudListe(R,10.00,31.23);
     printf("x = %.2f y = %.2f\n",N1->x,N1->y);
