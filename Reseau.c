@@ -44,15 +44,16 @@ Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
     return noeud_recherche;
 }
 
-void inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
+//Fonction inutilisée dans le programme
+/*void inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
     CellNoeud * nouveau_nd = (CellNoeud *)malloc(sizeof(CellNoeud));
     
-}
+}*/
 
 Reseau * reconstitueReseauListe(Chaines * C){
     CellNoeud * V = NULL;
     CellChaine * liste_chaine = C->chaines;
-
+    Reseau *R=(Reseau*)malloc(sizeof(Reseau));
     int num = 0;
     while(liste_chaine){
 
@@ -84,6 +85,7 @@ Reseau * reconstitueReseauListe(Chaines * C){
 
         liste_chaine = liste_chaine->suiv;
     }
+    return R;
 }
 
 
@@ -137,7 +139,7 @@ void ecrireReseau(Reseau *R, FILE *f){
     fprintf(f, "NbNoeuds: %d\n", nbNoeuds);
     fprintf(f, "NbLiaisons: %d\n", nb_liaisons);
     fprintf(f, "NbCommodites: %d\n", nb_commodites);
-    fprintf(f, "Gamma: %d\n", gamma);
+    fprintf(f, "Gamma: %d\n\n", gamma);
 
     // Ecriture des noeuds v
     CellNoeud * liste_noeud = R->noeuds;
