@@ -40,44 +40,59 @@ Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
     return noeud_recherche;
 }
 
-//Fonction inutilisée dans le programme
-/*void inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
-    CellNoeud * nouveau_nd = (CellNoeud *)malloc(sizeof(CellNoeud));
-    
-}*/
+
+
+
+int recherche_noeud(CellNoeud * V, double x, double y){
+    if (V == NULL){
+        return 0;
+    }
+    else{
+        while(V){
+            if(V->nd->x == x && V->nd->y == y){
+                return 1; // si trouve
+            }
+            V = V->suiv;
+        }
+    }
+    return 0; // pas trouve
+}
+
+void inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
+    CellNoeud* new=(CellNoeud*)malloc(sizeof(CellNoeud));
+    new->nd=nd_inserer;
+    new->suiv=liste_noeuds;
+    liste_noeuds=new;    
+}
 
 Reseau * reconstitueReseauListe(Chaines * C){
-    CellNoeud * V = NULL;
-    CellChaine * liste_chaine = C->chaines;
+    //initialiser reseau 
     Reseau *R=(Reseau*)malloc(sizeof(Reseau));
-    int num = 0;
+    R->nbNoeuds=0;
+    R->gamma=0;
+    R->commodites=NULL;
+
+    CellNoeud * V = NULL;
+    R->noeuds=V;
+    CellChaine * liste_chaine = C->chaines;
+    int num=0;
     while(liste_chaine){
 
         CellPoint * liste_points = liste_chaine->points;
+        
         while(liste_points) {
-            while(V){
-                if(!(V->nd->x == liste_points->x && V->nd->y == liste_points->y)){
-                    if(V == NULL){
-                        V = (CellNoeud *)malloc(sizeof(CellNoeud));
-                        V->nd = (Noeud *)malloc(sizeof(Noeud));
-                        V->nd->x = liste_points->x;
-                        V->nd->y = liste_points->y;
-                        V->nd->num = num ;
-                        num++;
-
-                        V->nd->voisins = NULL; // !!!!!!!!!!!!!!
-
-                        V->suiv = NULL; 
-                    }
-                    else{
-                        
-                    }
-                }
-                V = V->suiv;
+            
+            int trouve = recherche_noeud(V, liste_points->x, liste_points->y);
+            // si pas trouve
+            if(!trouve){
+                Noeud* nd =rechercheCreeNoeudListe(R,liste_points->x,liste_points->y);
+                inserer_noeud(V,nd);
             }
+            
 
             liste_points = liste_points->suiv;
         }
+        V=R->noeuds;
 
         liste_chaine = liste_chaine->suiv;
     }
@@ -85,7 +100,7 @@ Reseau * reconstitueReseauListe(Chaines * C){
 }
 
 
-// A revoir !!!!!!!!
+
 int nbLiaisons(Reseau *R){
     int total = 0;
     CellNoeud * liste_noeud = R->noeuds;
@@ -167,7 +182,7 @@ void ecrireReseau(Reseau *R, FILE *f){
 
         fprintf(f, "k %d %d\n", liste_commodites->extrA->num, liste_commodites->extrB->num);
 
-        liste_commodités = liste_commodites->suiv;
+        liste_commodites = liste_commodites->suiv;
     }
     
 }
