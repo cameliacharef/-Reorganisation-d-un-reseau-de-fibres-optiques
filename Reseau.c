@@ -75,7 +75,7 @@ Reseau * reconstitueReseauListe(Chaines * C){
     CellNoeud * V = NULL;
     R->noeuds=V;
     CellChaine * liste_chaine = C->chaines;
-    int num=0;
+
     while(liste_chaine){
 
         CellPoint * liste_points = liste_chaine->points;
@@ -87,8 +87,11 @@ Reseau * reconstitueReseauListe(Chaines * C){
             if(!trouve){
                 Noeud* nd =rechercheCreeNoeudListe(R,liste_points->x,liste_points->y);
                 inserer_noeud(V,nd);
+                //On ajoute dans les voisins 1 voisin au point actuel et lui-même au voisin du précédent
+                nd->voisin=
             }
             
+
 
             liste_points = liste_points->suiv;
         }
@@ -238,6 +241,6 @@ void liberer_commodites(CellCommodite* commodites){
 
 void liberer_Reseau(Reseau* R){
     liberer_CellNoeud(R->noeuds);
-    liberer_CellCommodites(R->commodites);
+    liberer_commodites(R->commodites);
     free(R);
 }

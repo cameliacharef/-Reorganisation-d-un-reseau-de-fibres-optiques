@@ -40,6 +40,7 @@ int main(int argc, char* argv[]){
     ecrireReseau(R,fe);
     //afficheReseauSVG(R,???);
     fclose(fe);
+    liberer_Reseau(R);
   }else if(atoi(argv[2])==2){    
     printf("Méthode non encore mise en place\n");
   }else if(atoi(argv[2])==3){    
@@ -47,6 +48,8 @@ int main(int argc, char* argv[]){
   }else{
     printf("Saisissez un autre nombre.\n");
   }
+
+  
 
   fclose(fl);
   return 0;
