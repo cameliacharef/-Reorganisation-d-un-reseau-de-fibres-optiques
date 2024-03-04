@@ -161,7 +161,7 @@ void ecrireReseau(Reseau *R, FILE *f){
 
         liste_noeud = liste_noeud->suiv;
     }
-
+    fprintf(f,"\n");
     // Ecriture des liaisons l
     liste_noeud = R->noeuds;
     for(int j = 0; j < nb_liaisons; j++){
@@ -169,7 +169,7 @@ void ecrireReseau(Reseau *R, FILE *f){
         Noeud * noeud = liste_noeud->nd;
         CellNoeud * voisins = noeud->voisins;
         while (voisins){
-            fprintf(f, "l %.2f %d\n", voisins->nd->x, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
+            fprintf(f, "l %d %d\n", voisins->nd->num, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
             voisins = voisins->suiv;
         }
 
