@@ -217,3 +217,27 @@ void afficheReseauSVG(Reseau *R, char* nomInstance){
     }
     SVGfinalize(&svg);
 }
+
+void liberer_CellNoeud(CellNoeud* liste_noeuds){
+    while(liste_noeuds){
+        CellNoeud* tmp=liste_noeuds;
+        liste_noeuds=liste_noeuds->suiv;
+        free(tmp);
+    }
+    free(liste_noeuds);
+}
+
+void liberer_commodites(CellCommodite* commodites){
+    while(commodites){
+        CellCommodite* tmp=commodites;
+        commodites=commodites->suiv;
+        free(tmp);
+    }
+    free(commodites);
+}
+
+void liberer_Reseau(Reseau* R){
+    liberer_CellNoeud(R->noeuds);
+    liberer_CellCommodites(R->commodites);
+    free(R);
+}
