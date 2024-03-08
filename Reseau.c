@@ -86,9 +86,11 @@ Reseau * reconstitueReseauListe(Chaines * C){
             // si pas trouve
             if(!trouve){
                 Noeud* nd =rechercheCreeNoeudListe(R,liste_points->x,liste_points->y);
+                Noeud* tmp=V->nd;
+                inserer_noeud(tmp->voisins,nd); //ajout d'un nouveau voisin au précédent noeud
                 inserer_noeud(V,nd);
+                inserer_noeud(V->nd->voisins,tmp); //ajout d'un nouveau voisin au noeud créé
                 //On ajoute dans les voisins 1 voisin au point actuel et lui-même au voisin du précédent
-                nd->voisin=
             }
             
 
