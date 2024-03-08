@@ -223,9 +223,14 @@ void afficheReseauSVG(Reseau *R, char* nomInstance){
     SVGfinalize(&svg);
 }
 
+void liberer_noeud(Noeud* nd){
+    liberer_CellNoeud(nd->voisins);//ajout
+}
+
 void liberer_CellNoeud(CellNoeud* liste_noeuds){
     while(liste_noeuds){
         CellNoeud* tmp=liste_noeuds;
+        liberer_noeud(tmp->nd);//ajout
         liste_noeuds=liste_noeuds->suiv;
         free(tmp);
     }
