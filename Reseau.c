@@ -232,9 +232,9 @@ void ecrireReseau(Reseau *R, FILE *f){
         CellNoeud* tmp = NULL;
         while (voisins){
             //Si le noeud n'est pas présent dans tmp, on écrit le noeud
-            if(){
+if(){
                 fprintf(f, "l %d %d\n", voisins->nd->num, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
-            }
+}
             voisins = voisins->suiv;
         }
 
