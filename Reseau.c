@@ -44,16 +44,11 @@ Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
 
 
 int recherche_noeud(CellNoeud * V, double x, double y){
-    if (V == NULL){
-        return 0;
-    }
-    else{
-        while(V){
-            if(V->nd->x == x && V->nd->y == y){
-                return 1; // si trouve
-            }
-            V = V->suiv;
+    while(V){
+        if(V->nd->x == x && V->nd->y == y){
+            return 1; // si trouve
         }
+        V = V->suiv;
     }
     return 0; // pas trouve
 }
@@ -65,15 +60,14 @@ void inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
     liste_noeuds=new;    
 }
 
-Reseau * reconstitueReseauListe(Chaines * C){
+/*Reseau * reconstitueReseauListe(Chaines * C){
     //initialiser reseau 
-    Reseau *R=(Reseau*)malloc(sizeof(Reseau));
-    R->nbNoeuds=0;
-    R->gamma=0;
-    R->commodites=NULL;
+    Reseau *R = (Reseau *)malloc(sizeof(Reseau));
+    R->nbNoeuds = 0;
+    R->gamma = 0;
+    R->commodites = NULL;
 
     CellNoeud * V = NULL;
-    R->noeuds=V;
     CellChaine * liste_chaine = C->chaines;
 
     while(liste_chaine){
@@ -85,22 +79,83 @@ Reseau * reconstitueReseauListe(Chaines * C){
             int trouve = recherche_noeud(V, liste_points->x, liste_points->y);
             // si pas trouve
             if(!trouve){
-                Noeud* nd =rechercheCreeNoeudListe(R,liste_points->x,liste_points->y);
-                Noeud* tmp=V->nd;
-                inserer_noeud(tmp->voisins,nd); //ajout d'un nouveau voisin au précédent noeud
-                inserer_noeud(V,nd);
-                inserer_noeud(V->nd->voisins,tmp); //ajout d'un nouveau voisin au noeud créé
-                //On ajoute dans les voisins 1 voisin au point actuel et lui-même au voisin du précédent
+                Noeud* nd = rechercheCreeNoeudListe(R,liste_points->x, liste_points->y);
+                Noeud* tmp = V->nd;
+                inserer_noeud(tmp->voisins, nd); //ajout d'un nouveau voisin au noeud tmp
+                inserer_noeud(V, nd);
+                inserer_noeud(V->nd->voisins, tmp); //ajout d'un nouveau voisin au noeud créé
             }
-            
+            //mettre à jour les voisins de p et de ceux de ses voisins
 
-
+            //conserver la commodité de la chaîne
             liste_points = liste_points->suiv;
         }
-        V=R->noeuds;
 
         liste_chaine = liste_chaine->suiv;
     }
+    return R;
+}*/
+
+Reseau * reconstitueReseauListe(Chaines * C){
+    Reseau *R = (Reseau *)malloc(sizeof(Reseau));
+    R->nbNoeuds = 0;
+    R->gamma = 0;
+    R->commodites = (CellCommodite *)malloc(sizeof(CellCommodite));
+
+    //Initialisation de V
+    CellNoeud *V=NULL;
+    V=(CellNoeud *)malloc(sizeof(CellNoeud));
+
+    CellChaine *chaineCourante= C->chaines;
+
+    //Initialisation des noeuds extrêmes de la commodité
+    Noeud *debut,*fin;
+    //Parcours des chaînes
+    while(chaineCourante){
+        CellPoint *points=chaineCourante->points;
+        Noeud *precedant = NULL;
+        //Nombre de noeuds de la chaîne
+        int nbNoeuds = 0;
+        //Parcours des points de chaque chaîne
+        while(points){
+            int trouve = recherche_noeud(V,points->x,points->y);
+            Noeud *nvNoeud = rechercheCreeNoeudListe(R,points->x,points->y);
+            if(nbNoeuds==0){
+                debut=nvNoeud;
+            }
+
+            nbNoeuds++;
+            fin=nvNoeud;
+
+            //Si p n'appartient pas à V
+            if(trouve==0){
+                //ajout du noeud correspondant à p dans V
+                inserer_noeud(V,nvNoeud);
+            }
+            //Mise à jour des voisins de p et de ceux de ses voisins : à revoir
+            Noeud *suivant = rechercheCreeNoeudListe(R,points->suiv->x,points->suiv->y);
+            if(precedant){
+                inserer_noeud(nvNoeud->voisins,precedant);
+            }
+            if(suivant){
+                inserer_noeud(nvNoeud->voisins,suivant);
+            }
+
+            //stocker le precedant noeud
+            precedant = nvNoeud;
+            points=points->suiv;
+        }
+        //Conservation de la commodité
+        CellCommodite * commodite = (CellCommodite *)malloc(sizeof(CellCommodite));
+        commodite->extrA=debut;
+        commodite->extrB=fin;
+        commodite->suiv=R->commodites;
+        R->commodites=commodite;
+
+
+        chaineCourante=chaineCourante->suiv;
+    }
+
     return R;
 }
 
@@ -173,8 +228,13 @@ void ecrireReseau(Reseau *R, FILE *f){
 
         Noeud * noeud = liste_noeud->nd;
         CellNoeud * voisins = noeud->voisins;
+
+        CellNoeud* tmp = NULL;
         while (voisins){
-            fprintf(f, "l %d %d\n", voisins->nd->num, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
+            //Si le noeud n'est pas présent dans tmp, on écrit le noeud
+            if(){
+                fprintf(f, "l %d %d\n", voisins->nd->num, noeud->num); // COMMENT ELIMINER LES DOUBLONS 
+            }
             voisins = voisins->suiv;
         }
 
@@ -251,3 +311,5 @@ void liberer_Reseau(Reseau* R){
     liberer_commodites(R->commodites);
     free(R);
 }
+
+
