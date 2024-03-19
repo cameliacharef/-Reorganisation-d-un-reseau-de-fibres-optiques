@@ -6,10 +6,10 @@
 #include "SVGwriter.h"
 
 int main(int argc, char* argv[]){
-  if(argc != 3){
-        printf("Il faut 2 arguments : le nom du fichier et le numéro de l'action.\n");
+    if(argc != 3){
+        printf("Il faut 2 arguments : le nom du fichier et le numéro de l'action.\n"); // test_exo3.res
         return 0;
-  }
+    }
   
   FILE * fl = fopen("00014_burma.cha", "r"); 
   if (fl == NULL) {
@@ -25,11 +25,11 @@ int main(int argc, char* argv[]){
     nbNoeuds et gamma sont incroyablement très grands*/
     printf("Nombre de noeuds = %d Gamma = %d\n",R->nbNoeuds,R->gamma);
 
-    /*Test de la question 1 de l'exercice 2*/
+    /*Test de la question 1 de l'exercice 2
     Noeud* N1 = rechercheCreeNoeudListe(R,10.00,31.23);
     printf("x = %.2f y = %.2f\n",N1->x,N1->y);
     Noeud* N2 = rechercheCreeNoeudListe(R,10.00,31.23);
-    printf("x = %.2f y = %.2f\n",N2->x,N2->y);
+    printf("x = %.2f y = %.2f\n",N2->x,N2->y);*/
 
     /*Test de la question 1 de l'exercice 3*/
     int nbC = nbCommodites(R);

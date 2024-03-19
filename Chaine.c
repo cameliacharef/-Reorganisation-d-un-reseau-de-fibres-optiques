@@ -16,10 +16,10 @@ CellPoint * creer_cellPoint(double x, double y){
     return point;
 }
 
-CellChaine * creer_cellChaine(int numero, CellPoint * points){
+CellChaine * creer_cellChaine(int numero){
     CellChaine * chaine_points = (CellChaine *)malloc(sizeof(CellChaine));
     chaine_points->numero = numero;
-    chaine_points->points = points; 
+    chaine_points->points = NULL; //Liste des points initialise a NULL  
     chaine_points->suiv = NULL;
 
     return chaine_points;
@@ -34,11 +34,11 @@ int nombre_points(CellPoint * points){
     return nb;
 }
 
-Chaines * creer_Chaines(int gamma, int nbChaines, CellChaine * cellchaines){
+Chaines * creer_Chaines(){
     Chaines * chainesf = (Chaines *)malloc(sizeof(Chaines));
-    chainesf->gamma = gamma;
-    chainesf->nbChaines = nbChaines; 
-    chainesf->chaines = cellchaines;
+    chainesf->gamma = 0; // nbgamma initialise a 0
+    chainesf->nbChaines = 0; //nbchaine initialise a 0
+    chainesf->chaines = NULL;
 
     return chainesf;
 }
@@ -67,16 +67,17 @@ void liberer_Chaines(Chaines *chaines) {
     }
 }
 
-void inserer_point(CellPoint * point, double x, double y){
+// inserer en tete de la liste de points de chaine 
+void inserer_point(CellChaine * chaine, double x, double y){
     CellPoint * new_point = creer_cellPoint(x, y);
-    new_point->suiv = point;
-    point = new_point;
+    new_point->suiv = chaine->points;
+    chaine->points = new_point;
 }
 
-void inserer_cellChaine(CellChaine * chaine, int numero, CellPoint * point){
-    CellChaine * new_chaine = creer_cellChaine(numero, point);
-    new_chaine->suiv = chaine;
-    chaine = new_chaine;
+// inserer en tete de la liste de chaines de CHAINE 
+void inserer_cellChaine(Chaines * liste_chaines, CellChaine * chaine){
+    chaine->suiv = liste_chaines->chaines;
+    liste_chaines->chaines = chaine;
 }
 
 Chaines *lectureChaines(FILE *f) {
@@ -94,9 +95,12 @@ Chaines *lectureChaines(FILE *f) {
     fgets(buffer, 256, f);
     sscanf(buffer, "Gamma: %d", &Gamma);
 
+    // Creation de la structure de l'ensemble des chaines a retourner 
+    Chaines* chaines = creer_Chaines();
+    chaines->nbChaines = NbChain;
+    chaines->gamma = Gamma;
+
     // Lecture des chaines
- 
-    CellChaine *nouvel_chaine = NULL;
 
     for (int j =  0 ;  j < NbChain ; j++) {
 
@@ -104,25 +108,22 @@ Chaines *lectureChaines(FILE *f) {
 
         fscanf(f, "%d %d ", &numero_chaine, &nb_points);
 
+        //Creation de la chaine
+        CellChaine *nouvel_chaine = creer_cellChaine(numero_chaine);
+
         // Création de la liste de points
-        CellPoint *nouveau_point = NULL;
+
         for (int i = 0; i < nb_points; i++) {
             double x, y;
             fscanf(f, "%lf %lf ", &x, &y);
-            
-            CellPoint *point = creer_cellPoint(x, y);
-            point->suiv = nouveau_point;
-            nouveau_point = point;
-        }
-
-        CellChaine *chaine = creer_cellChaine(numero_chaine, nouveau_point);
-        chaine->suiv = nouvel_chaine;
-        nouvel_chaine = chaine;
         
+            inserer_point(nouvel_chaine, x, y);
+        }
+        //inserer chaque chaine dans notre ensemble de chaine 
+        inserer_cellChaine(chaines, nouvel_chaine);
+
     }
 
-    // Création de la structure Chaines
-    Chaines* chaines = creer_Chaines(Gamma, NbChain, nouvel_chaine);
     return chaines;
 }
 
