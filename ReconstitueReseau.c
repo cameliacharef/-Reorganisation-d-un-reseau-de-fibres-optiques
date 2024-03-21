@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
   }
 
   
-
+  liberer_Chaines(chaines);
   fclose(fl);
   return 0;
 }

@@ -249,7 +249,7 @@ void ecrireReseau(Reseau *R, FILE *f){
     }
 
     fprintf(f,"\n");
-    
+
     // Ecriture des liaisons l
     liste_noeud = R->noeuds;
     while(liste_noeud){
@@ -318,9 +318,9 @@ void liberer_noeud(Noeud* nd){
 
 void liberer_CellNoeud(CellNoeud* liste_noeuds){
     while(liste_noeuds){
-        CellNoeud* tmp=liste_noeuds;
-        liberer_noeud(tmp->nd);//ajout
-        liste_noeuds=liste_noeuds->suiv;
+        CellNoeud* tmp = liste_noeuds;
+        liberer_noeud(tmp->nd); //ajout
+        liste_noeuds = liste_noeuds->suiv;
         free(tmp);
     }
     free(liste_noeuds);
@@ -328,8 +328,9 @@ void liberer_CellNoeud(CellNoeud* liste_noeuds){
 
 void liberer_commodites(CellCommodite* commodites){
     while(commodites){
-        CellCommodite* tmp=commodites;
-        commodites=commodites->suiv;
+        CellCommodite* tmp = commodites;
+        
+        commodites = commodites->suiv;
         free(tmp);
     }
     free(commodites);
