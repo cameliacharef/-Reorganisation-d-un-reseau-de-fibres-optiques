@@ -4,6 +4,7 @@
 #include "Chaine.h"
 #include "Reseau.h"
 #include "SVGwriter.h"
+#include "Hachage.h"
 
 // Menu pour choisir la methode 
 void menu(){
@@ -112,7 +113,27 @@ int main(int argc , char *argv[]){
         printf("Affichage du reseau dans le fichier html affchagereseauListe\n");
         break;
     case 2 : ;
-        printf("Méthode non encore mise en place\n");
+        R = reconstitueReseauHachage(chaines, 1000);
+        printf("Nombre de noeuds = %d Gamma = %d\n", R->nbNoeuds, R->gamma);
+
+        //Test de la question 1 de l'exercice 2
+        //Noeud * N1 = rechercheCreeNoeudListe(R, 10.00, 31.23);
+        //printf("x = %.2f y = %.2f\n", N1->x, N1->y);
+        //Noeud * N2 = rechercheCreeNoeudListe(R, 10.00, 31.23);
+        //printf("x = %.2f y = %.2f\n", N2->x, N2->y);
+
+        //Test de la question 1 de l'exercice 3 
+        nbC = nbCommodites(R);
+        nbL = nbLiaisons(R);
+        printf("Nombre de commodités : %d\nNombre de liaisons : %d\n", nbC, nbL);
+
+        fe = fopen("test_exo4.res", "w");
+        ecrireReseau(R, fe);
+        afficheReseauSVG(R, "affchagereseauHachage");
+        fclose(fe);
+
+        liberer_Reseau(R);
+        printf("Affichage du reseau dans le fichier html affchagereseauHachage\n");
         break ;
     case 3 : ;
         printf("Méthode non encore mise en place\n");

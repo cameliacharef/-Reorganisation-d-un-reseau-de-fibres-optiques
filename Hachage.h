@@ -5,7 +5,11 @@
 typedef struct{
   int nbElement; //pas necessaire ici
   int tailleMax;
-  CellNoeud** T;
+  CellNoeud ** T;
 } TableHachage ;
+
+
+Noeud * rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y);
+Reseau* reconstitueReseauHachage(Chaines *C, int M);
 
 #endif

@@ -6,6 +6,7 @@
 #include "Chaine.h"
 #include "Reseau.h"
 
+
 Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
     CellNoeud * liste_Noeuds = R->noeuds;
 
@@ -81,7 +82,7 @@ Reseau * reconstitueReseauListe(Chaines * C){
 
     CellCommodite * liste_commodite = NULL ; //liste de commodite a inserer 
 
-    CellChaine *chaine_courante= C->chaines;
+    CellChaine *chaine_courante = C->chaines;
 
     
 

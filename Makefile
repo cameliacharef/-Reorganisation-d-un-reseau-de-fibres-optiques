@@ -8,7 +8,7 @@ all: $(PROGRAMS)
 ChaineMain: ChaineMain.o Chaine.o SVGwriter.o
 	$(CC) $(FLAGS) -o $@ $^ -lm
 
-ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o
+ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o Hachage.o
 	$(CC) $(FLAGS) -o $@ $^ -lm
 
 ArbreQuat.o: ArbreQuat.c
@@ -21,7 +21,7 @@ ChaineMain.o: ChaineMain.c
 	$(CC) $(FLAGS) -c -o $@ $^ -lm
 
 Hachage.o: Hachage.c
-	$(CC) $(FLAGS) -c -o $@ $^
+	$(CC) $(FLAGS) -c -o $@ $^ -lm
 
 ReconstitueReseau.o : ReconstitueReseau.c
 	$(CC) $(FLAGS) -c -o $@ $^
