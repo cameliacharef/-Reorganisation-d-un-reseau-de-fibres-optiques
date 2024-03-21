@@ -53,17 +53,18 @@ int recherche_noeud(CellNoeud * V, double x, double y){
     return 0; // pas trouve
 }
 
-void inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
+CellNoeud * inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
     CellNoeud * tmp = liste_noeuds;
     while(tmp && tmp->nd != nd_inserer){
         tmp = tmp->suiv;
     }
     if(tmp == NULL){
-        CellNoeud* new=(CellNoeud*)malloc(sizeof(CellNoeud));
-        new->nd=nd_inserer;
-        new->suiv=liste_noeuds;
-        liste_noeuds=new;   
+        CellNoeud * new = (CellNoeud *)malloc(sizeof(CellNoeud));
+        new->nd = nd_inserer;
+        new->suiv = liste_noeuds;
+        liste_noeuds = new;   
     }
+    return liste_noeuds;
      
 }
 
@@ -150,8 +151,8 @@ Reseau * reconstitueReseauListe(Chaines * C){
             //Et on insere le precedant dans la liste des voisins du nouveau
             //Sans meler noeud suivant comme on avait fait 
             if(precedant != NULL){
-                inserer_noeud(precedant->voisins, nvNoeud);
-                inserer_noeud(nvNoeud->voisins, precedant);
+                precedant->voisins = inserer_noeud(precedant->voisins, nvNoeud);
+                nvNoeud->voisins = inserer_noeud(nvNoeud->voisins, precedant);
             }
             
             //Mise à jour des voisins de p et de ceux de CellChaineses voisins : à revoir
@@ -246,7 +247,9 @@ void ecrireReseau(Reseau *R, FILE *f){
 
         liste_noeud = liste_noeud->suiv;
     }
+
     fprintf(f,"\n");
+    
     // Ecriture des liaisons l
     liste_noeud = R->noeuds;
     while(liste_noeud){
@@ -264,6 +267,8 @@ void ecrireReseau(Reseau *R, FILE *f){
 
         liste_noeud = liste_noeud->suiv;
     }
+
+    fprintf(f,"\n");
 
     // Ecrire les commodités k 
     CellCommodite * liste_commodites = R->commodites;
