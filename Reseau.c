@@ -43,7 +43,7 @@ Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
 
 
 
-int recherche_noeud(CellNoeud * V, double x, double y){
+/*int recherche_noeud(CellNoeud * V, double x, double y){
     while(V){
         if(V->nd->x == x && V->nd->y == y){
             return 1; // si trouve
@@ -51,58 +51,25 @@ int recherche_noeud(CellNoeud * V, double x, double y){
         V = V->suiv;
     }
     return 0; // pas trouve
-}
+}*/
 
 CellNoeud * inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
     CellNoeud * tmp = liste_noeuds;
+    // Parcourir la liste pour vérifier si le noeud à insérer existe déjà
     while(tmp && tmp->nd != nd_inserer){
         tmp = tmp->suiv;
     }
+    // Si le noeud à insérer n'existe pas déjà dans la liste
     if(tmp == NULL){
         CellNoeud * new = (CellNoeud *)malloc(sizeof(CellNoeud));
         new->nd = nd_inserer;
         new->suiv = liste_noeuds;
         liste_noeuds = new;   
     }
+    // Retour de la tête de liste mise à jour
     return liste_noeuds;
      
 }
-
-/*Reseau * reconstitueReseauListe(Chaines * C){
-    //initialiser reseau 
-    Reseau *R = (Reseau *)malloc(sizeof(Reseau));
-    R->nbNoeuds = 0;
-    R->gamma = 0;
-    R->commodites = NULL;
-
-    CellNoeud * V = NULL;
-    CellChaine * liste_chaine = C->chaines;
-
-    while(liste_chaine){
-
-        CellPoint * liste_points = liste_chaine->points;
-        
-        while(liste_points) {
-            
-            int trouve = recherche_noeud(V, liste_points->x, liste_points->y);
-            // si pas trouve
-            if(!trouve){
-                Noeud* nd = rechercheCreeNoeudListe(R,liste_points->x, liste_points->y);
-                Noeud* tmp = V->nd;
-                inserer_noeud(tmp->voisins, nd); //ajout d'un nouveau voisin au noeud tmp
-                inserer_noeud(V, nd);
-                inserer_noeud(V->nd->voisins, tmp); //ajout d'un nouveau voisin au noeud créé
-            }
-            //mettre à jour les voisins de p et de ceux de ses voisins
-
-            //conserver la commodité de la chaîne
-            liste_points = liste_points->suiv;
-        }
-
-        liste_chaine = liste_chaine->suiv;
-    }
-    return R;
-}*/
 
 Reseau * reconstitueReseauListe(Chaines * C){
     //initialisation du RESEAU 
@@ -313,31 +280,51 @@ void afficheReseauSVG(Reseau *R, char* nomInstance){
 }
 
 void liberer_noeud(Noeud* nd){
-    liberer_CellNoeud(nd->voisins);//ajout
+    liberer_CellNoeud(nd->voisins); //ajout // Libération de la liste des voisins
+    free(nd);
 }
 
 void liberer_CellNoeud(CellNoeud* liste_noeuds){
+    CellNoeud* tmp;
     while(liste_noeuds){
-        CellNoeud* tmp = liste_noeuds;
-        liberer_noeud(tmp->nd); //ajout
+        tmp = liste_noeuds;
+        //liberer_noeud(tmp->nd); //ajout
         liste_noeuds = liste_noeuds->suiv;
         free(tmp);
     }
-    free(liste_noeuds);
+    //free(liste_noeuds);
 }
 
 void liberer_commodites(CellCommodite* commodites){
+    CellCommodite* tmp;
     while(commodites){
-        CellCommodite* tmp = commodites;
-        
+        tmp = commodites;
         commodites = commodites->suiv;
         free(tmp);
     }
     free(commodites);
 }
 
+
 void liberer_Reseau(Reseau* R){
-    liberer_CellNoeud(R->noeuds);
+    // on crée un tableau pour tester si un noeud est libere deja
+    int tabN[R->nbNoeuds];
+    for (int i = 0; i < R->nbNoeuds; i++) {
+        tabN[i] = 1; // Initialisation du tableau avec des 1 pour indiquer que tous les noeuds sont à libérer
+    }
+    // on libère les noeuds
+    CellNoeud *liste_noeuds = R->noeuds;
+    CellNoeud* tmp;
+    while (liste_noeuds){
+        if (tabN[(liste_noeuds->nd->num) - 1] == 1){
+            tabN[(liste_noeuds->nd->num) - 1] = 0;
+            liberer_noeud(liste_noeuds->nd);
+        }
+        tmp = liste_noeuds;
+        liste_noeuds = liste_noeuds->suiv;
+        free(tmp);
+    }
+    // Liberation des commodites
     liberer_commodites(R->commodites);
     free(R);
 }
