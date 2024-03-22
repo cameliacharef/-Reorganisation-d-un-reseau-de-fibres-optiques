@@ -1,10 +1,6 @@
 #include <stdio.h> 
 #include <stdlib.h> 
-#include <assert.h>
 #include <math.h>
-
-#include "SVGwriter.h"
-
 #include "Reseau.h"
 #include "Hachage.h"
 
