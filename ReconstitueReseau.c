@@ -5,6 +5,7 @@
 #include "Reseau.h"
 #include "SVGwriter.h"
 #include "Hachage.h"
+#include "ArbreQuat.h"
 
 // Menu pour choisir la methode 
 void menu(){
