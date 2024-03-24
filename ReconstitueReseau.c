@@ -110,7 +110,7 @@ int main(int argc , char *argv[]){
 
         liberer_Reseau(R);
 
-        printf("Affichage du reseau dans le fichier html affchagereseauListe\n");
+        printf("Affichage du reseau dans le fichier html affichagereseauListe\n");
         break;
     case 2 : ;
         R = reconstitueReseauHachage(chaines, 1000);
@@ -129,11 +129,11 @@ int main(int argc , char *argv[]){
 
         fe = fopen("test_exo4.res", "w");
         ecrireReseau(R, fe);
-        afficheReseauSVG(R, "affchagereseauHachage");
+        afficheReseauSVG(R, "affichagereseauHachage");
         fclose(fe);
 
         liberer_Reseau(R);
-        printf("Affichage du reseau dans le fichier html affchagereseauHachage\n");
+        printf("Affichage du reseau dans le fichier html affichagereseauHachage\n");
         break ;
     case 3 : ;
         printf("Méthode non encore mise en place\n");
