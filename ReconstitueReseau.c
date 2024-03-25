@@ -137,7 +137,7 @@ int main(int argc , char *argv[]){
         printf("Affichage du reseau dans le fichier html affichagereseauHachage\n");
         break ;
     case 3 : ;
-        printf("Méthode non encore mise en place\n");
+        /*...*/
         break; 
     
     default: ;

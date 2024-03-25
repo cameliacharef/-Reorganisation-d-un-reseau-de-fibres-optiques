@@ -50,7 +50,67 @@ ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY){
 }
 
 void insererNoeudArbre(Noeud * n, ArbreQuat ** a, ArbreQuat * parent){
+    //Il existe trois cas d'insertion du noeud n
+
+    //Cas 1 : Si l'arbre est vide
     if(*a == NULL){
-        ArbreQuat * nouvel_arbreQ = creerArbreQuat;
+        //Conditions
+        double xc,yc;
+        if(n->x < parent->xc){
+            xc=parent->xc/2;
+        }else{
+            xc=parent->xc/2+parent->xc;
+        }
+
+        if(n->y < parent->yc){
+            yc=parent->yc/2;
+        }else{
+            yc=parent->yc/2+parent->yc;
+        }
+
+        *a = creerArbreQuat(xc,yc,parent->coteX/2,parent->coteY/2);
+        (*a)->noeud=n;
+    }
+
+    //Cas 2 : Si la racine de l'arbre a est une feuille
+    else if((*a)->noeud != NULL){
+        Noeud * feuilleExistante = (*a)->noeud;
+        (*a)->noeud=NULL;
+        //Si le noeud à insérer est au sud-ouest de la feuille existante
+        if(n->x < feuilleExistante->x && n->y < feuilleExistante->y){
+            insererNoeudArbre(feuilleExistante,&((*a)->ne),parent);
+            insererNoeudArbre(n,&((*a)->so),parent);
+        }
+        //Si le noeud à insérer est au nord-ouest de la feuille existante
+        else if(n->x < feuilleExistante->x && n->y >= feuilleExistante->y){
+            insererNoeudArbre(feuilleExistante,&(*a)->se,parent);
+            insererNoeudArbre(n,&((*a)->no),parent);
+        }//Si le noeud à insérer est au sud-est de la feuille existante
+        else if(n->x >= feuilleExistante->x && n->y < feuilleExistante->y){
+            insererNoeudArbre(feuilleExistante,&((*a)->no),parent);
+            insererNoeudArbre(n,&((*a)->se),parent);
+        //Si le noeud à insérer est au nord-est de la feuille existante
+        }else{
+            insererNoeudArbre(feuilleExistante,&((*a)->so),parent);
+            insererNoeudArbre(n,&((*a)->ne),parent);
+        }
+
+    }
+
+    //Cas 3 : Si la racine de a est une cellule interne
+    else{
+        if(n->x < (*a)->xc && n->y < (*a)->yc){
+            insererNoeudArbre(n,&((*a)->so),parent);
+        }
+        //Si le noeud à insérer est au nord-ouest de la feuille existante
+        else if(n->x < (*a)->xc && n->y >= (*a)->yc){
+            insererNoeudArbre(n,&((*a)->no),parent);
+        }//Si le noeud à insérer est au sud-est de la feuille existante
+        else if(n->x >= (*a)->xc && n->y < (*a)->yc){
+            insererNoeudArbre(n,&((*a)->se),parent);
+        //Si le noeud à insérer est au nord-est de la feuille existante
+        }else{
+            insererNoeudArbre(n,&((*a)->ne),parent);
+        }
     }
 }
