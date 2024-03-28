@@ -1,6 +1,7 @@
 #ifndef __ARBRE_QUAT_H__
 #define __ARBRE_QUAT_H__
 #include "Reseau.h"
+#include "Chaine.h"
 
 /* Arbre quaternaire contenant les noeuds du reseau */
 typedef struct arbreQuat{
@@ -19,4 +20,5 @@ ArbreQuat * creerArbreQuat(double xc, double yc, double coteX, double coteY);
 void insererNoeudArbre(Noeud * n, ArbreQuat ** a, ArbreQuat * parent);
 Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, double x, double y);
 Reseau* reconstitueReseauArbre(Chaines* C);
+void libererArbreQuat(ArbreQuat * a);
 #endif

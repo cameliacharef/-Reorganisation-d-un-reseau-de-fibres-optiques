@@ -137,8 +137,28 @@ int main(int argc , char *argv[]){
         printf("Affichage du reseau dans le fichier html affichagereseauHachage\n");
         break ;
     case 3 : ;
-        /*...*/
-        break; 
+        R = reconstitueReseauArbre(chaines);
+        printf("Nombre de noeuds = %d Gamma = %d\n", R->nbNoeuds, R->gamma);
+
+        //Test de la question 1 de l'exercice 2
+        //Noeud * N1 = rechercheCreeNoeudListe(R, 10.00, 31.23);
+        //printf("x = %.2f y = %.2f\n", N1->x, N1->y);
+        //Noeud * N2 = rechercheCreeNoeudListe(R, 10.00, 31.23);
+        //printf("x = %.2f y = %.2f\n", N2->x, N2->y);
+
+        //Test de la question 1 de l'exercice 3 
+        nbC = nbCommodites(R);
+        nbL = nbLiaisons(R);
+        printf("Nombre de commodités : %d\nNombre de liaisons : %d\n", nbC, nbL);
+
+        fe = fopen("test_exo5.res", "w");
+        ecrireReseau(R, fe);
+        afficheReseauSVG(R, "affichagereseauArbre");
+        fclose(fe);
+
+        liberer_Reseau(R);
+        printf("Affichage du reseau dans le fichier html affichagereseauArbre\n");
+        break ;
     
     default: ;
         printf("veuillez suivre l'indication du menu");

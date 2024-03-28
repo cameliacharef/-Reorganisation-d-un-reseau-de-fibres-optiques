@@ -81,23 +81,6 @@ Noeud * rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y
 
 }
 
-CellNoeud * insererNoeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
-    CellNoeud * tmp = liste_noeuds;
-    // Parcourir la liste pour vérifier si le noeud à insérer existe déjà
-    while(tmp && tmp->nd != nd_inserer){
-        tmp = tmp->suiv;
-    }
-    // Si le noeud à insérer n'existe pas déjà dans la liste
-    if(tmp == NULL){
-        CellNoeud * new = (CellNoeud *)malloc(sizeof(CellNoeud));
-        new->nd = nd_inserer;
-        new->suiv = liste_noeuds;
-        liste_noeuds = new;   
-    }
-    // Retour de la tête de liste mise à jour
-    return liste_noeuds;
-     
-}
 
 TableHachage * initialiser_tableH(int tailleMax){
     TableHachage *H = (TableHachage *)(malloc(sizeof(TableHachage)));

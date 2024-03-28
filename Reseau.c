@@ -54,7 +54,7 @@ Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
     return 0; // pas trouve
 }*/
 
-CellNoeud * inserer_noeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
+CellNoeud * insererNoeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
     CellNoeud * tmp = liste_noeuds;
     // Parcourir la liste pour vérifier si le noeud à insérer existe déjà
     while(tmp && tmp->nd != nd_inserer){
@@ -119,8 +119,8 @@ Reseau * reconstitueReseauListe(Chaines * C){
             //Et on insere le precedant dans la liste des voisins du nouveau
             //Sans meler noeud suivant comme on avait fait 
             if(precedant != NULL){
-                precedant->voisins = inserer_noeud(precedant->voisins, nvNoeud);
-                nvNoeud->voisins = inserer_noeud(nvNoeud->voisins, precedant);
+                precedant->voisins = insererNoeud(precedant->voisins, nvNoeud);
+                nvNoeud->voisins = insererNoeud(nvNoeud->voisins, precedant);
             }
             
             //Mise à jour des voisins de p et de ceux de CellChaineses voisins : à revoir

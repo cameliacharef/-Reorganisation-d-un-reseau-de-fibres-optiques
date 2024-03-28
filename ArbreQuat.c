@@ -1,9 +1,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <math.h>
-#include "Reseau.h"
 #include "ArbreQuat.h"
-#include "Chaine.h"
 
 void chaineCoordMinMax(Chaines* C, double* xmin, double* ymin, double* xmax, double* ymax){
     CellChaine * chaines = C->chaines;
@@ -203,4 +201,102 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
         return noeud_recherche;
     }
 }
+
+void libererArbreQuat(ArbreQuat * a){
+    if(a){
+        if(a->se){
+            libererArbreQuat(a->se);
+        }
+        if(a->so){
+            libererArbreQuat(a->so);
+        }
+        if(a->ne){
+            libererArbreQuat(a->ne);
+        }
+        if(a->no){
+            libererArbreQuat(a->no);
+        }
+    }
+    free(a);
+    
+}
+
+Reseau* reconstitueReseauArbre(Chaines* C){
+    double xmin;
+    double ymin;
+    double xmax;
+    double ymax;
+    chaineCoordMinMax(C, &xmin, &ymin, &xmax, &ymax);
+
+    ArbreQuat *arbreQ = creerArbreQuat(xmin + ((xmax - xmin) / 2.0), ymin + ((ymax - ymin) / 2.0) , xmax - xmin , ymax - ymin);
+
+    //initialisation du RESEAU 
+    Reseau *R = (Reseau *)malloc(sizeof(Reseau));
+    R->nbNoeuds = 0;
+    R->gamma = C->gamma;
+    R->commodites = NULL;
+    R->noeuds = NULL;
+
+    CellCommodite * liste_commodite = NULL ; //liste de commodite a inserer 
+
+    CellChaine *chaine_courante = C->chaines;
+
+    
+
+    //Parcours des chaînes
+    while(chaine_courante){
+        //Initialisation des noeuds extrêmes de la commodité
+        Noeud *debut = NULL;
+        Noeud *fin = NULL;
+
+        //noeud precedant pour gestion des voisins
+        Noeud *precedant = NULL;
+
+        CellPoint *points = chaine_courante->points;
+        //Parcours des points de chaque chaîne
+        while(points){
+            
+            // Si le noeud n'est pas dans V, on l'ajoute dans R 
+            Noeud * nvNoeud = rechercheCreeNoeudArbre(R, &arbreQ, NULL, points->x, points->y);
+
+            // debut de la chaine 
+            if(debut == NULL){
+                debut = nvNoeud;
+            }
+
+            fin = nvNoeud;
+
+            //Si precedant on insere le nouveau noeud dans la liste des voisins du precedant 
+            //Et on insere le precedant dans la liste des voisins du nouveau
+
+            if(precedant != NULL){
+                precedant->voisins = insererNoeud(precedant->voisins, nvNoeud);
+                nvNoeud->voisins = insererNoeud(nvNoeud->voisins, precedant);
+            }
+
+            //stocker le precedant noeud
+            precedant = nvNoeud;
+
+            points = points->suiv;
+        }
+
+
+        //Conservation de la commodité
+        CellCommodite * commodite = (CellCommodite *)malloc(sizeof(CellCommodite));
+        commodite->extrA = debut;
+        commodite->extrB = fin;
+        commodite->suiv = liste_commodite;
+        liste_commodite = commodite;
+
+
+        chaine_courante=chaine_courante->suiv;
+    }
+
+    R->commodites = liste_commodite; // liste commodite avec toutes commodites
+    libererArbreQuat(arbreQ);
+    return R;
+}
+
+
+
 
