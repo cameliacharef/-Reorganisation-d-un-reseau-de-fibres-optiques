@@ -33,7 +33,7 @@ void chaineCoordMinMax(Chaines* C, double* xmin, double* ymin, double* xmax, dou
 }
 
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY){
-    ArbreQuat * arbreQ = (ArbreQuat *)malloc(sizeof(ArbreQuat*));
+    ArbreQuat * arbreQ = (ArbreQuat *)malloc(sizeof(ArbreQuat));
     arbreQ->xc = xc;
     arbreQ->yc = yc;
     arbreQ->coteX = coteX; 
