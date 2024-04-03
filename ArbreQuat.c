@@ -55,19 +55,21 @@ void insererNoeudArbre(Noeud * n, ArbreQuat ** a, ArbreQuat * parent){
         //Conditions
         double xc;
         double yc;
+        double coteX = parent->coteX/2;
+        double coteY = parent->coteY/2;
         if(n->x < parent->xc){
-            xc = parent->xc / 2;
+            xc = parent->xc - coteX/ 2;
         }else{
-            xc = parent->xc / 2 + parent->xc;
+            xc = coteX / 2 + parent->xc;
         }
 
         if(n->y < parent->yc){
-            yc = parent->yc / 2;
+            yc = parent->yc - coteY/ 2;
         }else{
-            yc = parent->yc / 2 + parent->yc;
+            yc = coteY / 2 + parent->yc;
         }
 
-        *a = creerArbreQuat(xc, yc, parent->coteX / 2, parent->coteY / 2);
+        *a = creerArbreQuat(xc, yc, coteX, coteY);
         (*a)->noeud = n;
     }
 
@@ -77,44 +79,38 @@ void insererNoeudArbre(Noeud * n, ArbreQuat ** a, ArbreQuat * parent){
         (*a)->noeud = NULL;
         //Si le noeud à insérer est au sud-ouest de la feuille existante
         if(n->x < feuilleExistante->x && n->y < feuilleExistante->y){
-            insererNoeudArbre(feuilleExistante, &((*a)->ne), *a);
-            insererNoeudArbre(n, &((*a)->so), *a);
+            insererNoeudArbre(feuilleExistante, &(*a)->ne, *a);
         }
         //Si le noeud à insérer est au nord-ouest de la feuille existante
         if(n->x < feuilleExistante->x && n->y >= feuilleExistante->y){
             insererNoeudArbre(feuilleExistante, &(*a)->se, *a);
-            insererNoeudArbre(n, &((*a)->no), *a);
         }
         //Si le noeud à insérer est au sud-est de la feuille existante
         if(n->x >= feuilleExistante->x && n->y < feuilleExistante->y){
-            insererNoeudArbre(feuilleExistante, &((*a)->no), *a);
-            insererNoeudArbre(n, &((*a)->se), *a);
+            insererNoeudArbre(feuilleExistante, &(*a)->no, *a);
         }
         //Si le noeud à insérer est au nord-est de la feuille existante
         else {
-            insererNoeudArbre(feuilleExistante, &((*a)->so), *a);
-            insererNoeudArbre(n, &((*a)->ne), *a);
+            insererNoeudArbre(feuilleExistante, &(*a)->so, *a);
         }
 
-    }
-
     //Cas 3 : Si la racine de a est une cellule interne
-    else{
+
         //Si le noeud à insérer est au sud-ouest de la feuille existante
         if(n->x < (*a)->xc && n->y < (*a)->yc){
-            insererNoeudArbre(n, &((*a)->so), *a);
+            insererNoeudArbre(n, &(*a)->so, *a);
         }
         //Si le noeud à insérer est au nord-ouest de la feuille existante
         if(n->x < (*a)->xc && n->y >= (*a)->yc){
-            insererNoeudArbre(n, &((*a)->no), *a);
+            insererNoeudArbre(n, &(*a)->no, *a);
         }
         //Si le noeud à insérer est au sud-est de la feuille existante
         if(n->x >= (*a)->xc && n->y < (*a)->yc){
-            insererNoeudArbre(n, &((*a)->se), *a);
+            insererNoeudArbre(n, &(*a)->se, *a);
         }
         //Si le noeud à insérer est au nord-est de la feuille existante
         else{
-            insererNoeudArbre(n, &((*a)->ne), *a);
+            insererNoeudArbre(n, &(*a)->ne, *a);
         }
     }
 }
@@ -184,41 +180,39 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
         Noeud * noeud_recherche ;
         //Si le noeud à insérer est au sud-ouest de la feuille existante
         if(x < (*a)->xc && y < (*a)->yc){
-            noeud_recherche = rechercheCreeNoeudArbre(R, &((*a)->so), *a, x, y);
+            noeud_recherche = rechercheCreeNoeudArbre(R, &(*a)->so, *a, x, y);
         }
         //Si le noeud à insérer est au nord-ouest de la feuille existante
         if(x < (*a)->xc && y >= (*a)->yc){
-            noeud_recherche = rechercheCreeNoeudArbre(R, &((*a)->no), *a, x, y);
+            noeud_recherche = rechercheCreeNoeudArbre(R, &(*a)->no, *a, x, y);
         }
         //Si le noeud à insérer est au sud-est de la feuille existante
         if(x >= (*a)->xc && y < (*a)->yc){
-            noeud_recherche = rechercheCreeNoeudArbre(R, &((*a)->se), *a, x, y);
+            noeud_recherche = rechercheCreeNoeudArbre(R, &(*a)->se, *a, x, y);
         }
         //Si le noeud à insérer est au nord-est de la feuille existante
         else{
-            noeud_recherche = rechercheCreeNoeudArbre(R, &((*a)->ne), *a, x, y);
+            noeud_recherche = rechercheCreeNoeudArbre(R, &(*a)->ne, *a, x, y);
         }
         return noeud_recherche;
     }
 }
 
 void libererArbreQuat(ArbreQuat * a){
-    if(a){
-        if(a->se){
-            libererArbreQuat(a->se);
-        }
-        if(a->so){
-            libererArbreQuat(a->so);
-        }
-        if(a->ne){
-            libererArbreQuat(a->ne);
-        }
-        if(a->no){
-            libererArbreQuat(a->no);
-        }
+    if(!a){
+        return;
     }
-    free(a);
-    
+    if(a->noeud != NULL){
+        free(a);
+        return;
+    }
+    if(a){
+        libererArbreQuat(a->se);
+        libererArbreQuat(a->so);
+        libererArbreQuat(a->ne);
+        libererArbreQuat(a->no);
+        free(a);
+    }
 }
 
 Reseau* reconstitueReseauArbre(Chaines* C){
