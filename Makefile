@@ -1,7 +1,7 @@
 CC = gcc
 FLAGS = -Wall
-OBJECTS = ArbreQuat.o Chaine.o ChaineMain.o Hachage.o ReconstitueReseau.o Reseau.o SVGwriter.o ArbreQuat.o
-PROGRAMS = ChaineMain ReconstitueReseau
+OBJECTS = ArbreQuat.o Chaine.o ChaineMain.o Hachage.o ReconstitueReseau.o Reseau.o SVGwriter.o ArbreQuat.o main.o
+PROGRAMS = ChaineMain ReconstitueReseau main 
 
 all: $(PROGRAMS)
 
@@ -9,6 +9,9 @@ ChaineMain: ChaineMain.o Chaine.o SVGwriter.o
 	$(CC) $(FLAGS) -o $@ $^ -lm
 
 ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
+	$(CC) $(FLAGS) -o $@ $^ -lm
+
+main: main.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
 	$(CC) $(FLAGS) -o $@ $^ -lm
 
 ArbreQuat.o: ArbreQuat.c
@@ -30,6 +33,9 @@ Reseau.o : Reseau.c
 	$(CC) $(FLAGS) -c -o $@ $^
 
 SVGwriter.o: SVGwriter.c
+	$(CC) $(FLAGS) -c -o $@ $^
+
+main.o: main.c
 	$(CC) $(FLAGS) -c -o $@ $^
 
 clean:
