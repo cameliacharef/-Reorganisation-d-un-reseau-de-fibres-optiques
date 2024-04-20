@@ -232,3 +232,23 @@ int comptePointsTotal(Chaines *C){
     return nb_points;
 }
 
+Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax){
+    Chaines* liste_chaines = creer_Chaines();
+    liste_chaines->gamma = 3;
+
+    //Création d'un ensemble de chaînes
+    for(int i=0; i<nbChaines;i++){
+        //Création d'une nouvelle chaîne
+        CellChaine* chaine = creer_cellChaine(i+1);
+
+        //Génération aléatoire de points dans la chaîne créée
+        for(int j=0;j<nbPointsChaine;j++){
+            inserer_point(chaine,(double)(rand() % xmax),(double)(rand() % ymax));
+        }
+
+        //Insertion d'une chaîne dans la liste de chaînes
+        inserer_cellChaine(liste_chaines,chaine);
+        liste_chaines->nbChaines = liste_chaines->nbChaines +1 ;
+    }
+    return liste_chaines;
+}

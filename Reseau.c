@@ -42,18 +42,6 @@ Noeud * rechercheCreeNoeudListe(Reseau * R, double x, double y){
 }
 
 
-
-
-/*int recherche_noeud(CellNoeud * V, double x, double y){
-    while(V){
-        if(V->nd->x == x && V->nd->y == y){
-            return 1; // si trouve
-        }
-        V = V->suiv;
-    }
-    return 0; // pas trouve
-}*/
-
 CellNoeud * insererNoeud(CellNoeud * liste_noeuds, Noeud * nd_inserer){
     CellNoeud * tmp = liste_noeuds;
     // Parcourir la liste pour vérifier si le noeud à insérer existe déjà
@@ -84,8 +72,6 @@ Reseau * reconstitueReseauListe(Chaines * C){
 
     CellChaine *chaine_courante = C->chaines;
 
-    
-
     //Parcours des chaînes
     while(chaine_courante){
         //Initialisation des noeuds extrêmes de la commodité
@@ -95,18 +81,12 @@ Reseau * reconstitueReseauListe(Chaines * C){
         //noeud precedant pour gestion des voisins
         Noeud *precedant = NULL;
 
-        //Nombre de noeuds de la chaîne
-        //int nbNoeuds = 0;
-
         CellPoint *points = chaine_courante->points;
         //Parcours des points de chaque chaîne
         while(points){
             
             // Si le noeud n'est pas dans V, on l'ajoute dans R 
             Noeud * nvNoeud = rechercheCreeNoeudListe(R, points->x, points->y);
-            /*if(nbNoeuds == 0){
-                debut=nvNoeud;
-            }*/
 
             // debut de la chaine 
             if(debut == NULL){
@@ -122,13 +102,6 @@ Reseau * reconstitueReseauListe(Chaines * C){
                 precedant->voisins = insererNoeud(precedant->voisins, nvNoeud);
                 nvNoeud->voisins = insererNoeud(nvNoeud->voisins, precedant);
             }
-            
-            //Mise à jour des voisins de p et de ceux de CellChaineses voisins : à revoir
-            //Noeud *suivant = rechercheCreeNoeudListe(R,points->suiv->x,points->suiv->y);
- 
-            /*if(suivant){
-                inserer_noeud(nvNoeud->voisins,suivant);
-            }*/
 
             //stocker le precedant noeud
             precedant = nvNoeud;
@@ -190,7 +163,6 @@ int nbCommodites(Reseau *R){
 }
 
 
-// REVOIR POUR ELIMINER LES DOUBLONS 
 void ecrireReseau(Reseau *R, FILE *f){
     assert(f != NULL);
 
@@ -200,7 +172,6 @@ void ecrireReseau(Reseau *R, FILE *f){
     int nb_commodites = nbCommodites(R);
 
     // Ecriture 4 premieres lignes 
-
     fprintf(f, "NbNoeuds: %d\n", nbNoeuds);
     fprintf(f, "NbLiaisons: %d\n", nb_liaisons);
     fprintf(f, "NbCommodites: %d\n", nb_commodites);
@@ -209,7 +180,6 @@ void ecrireReseau(Reseau *R, FILE *f){
     // Ecriture des noeuds v
     CellNoeud * liste_noeud = R->noeuds;
     for(int i = 0; i < nbNoeuds; i++){
-
         Noeud * noeud = liste_noeud->nd;
         fprintf(f, "v %d %.6f %.6f\n", noeud->num, noeud->x, noeud->y);
 
@@ -226,7 +196,7 @@ void ecrireReseau(Reseau *R, FILE *f){
         CellNoeud * voisins = noeud->voisins;
 
         while (voisins){
-            // il ya des doublons , on ecrit la liaison que celui 
+            // il ya des doublons, on ecrit la liaison
             if(noeud->num > voisins->nd->num){
                 fprintf(f, "l %d %d\n", voisins->nd->num, noeud->num);
             }
@@ -281,7 +251,7 @@ void afficheReseauSVG(Reseau *R, char* nomInstance){
 }
 
 void liberer_noeud(Noeud* nd){
-    liberer_CellNoeud(nd->voisins); //ajout // Libération de la liste des voisins
+    liberer_CellNoeud(nd->voisins); //ajout et libération de la liste des voisins
     free(nd);
 }
 
@@ -289,11 +259,9 @@ void liberer_CellNoeud(CellNoeud* liste_noeuds){
     CellNoeud* tmp;
     while(liste_noeuds){
         tmp = liste_noeuds;
-        //liberer_noeud(tmp->nd); //ajout
         liste_noeuds = liste_noeuds->suiv;
         free(tmp);
     }
-    //free(liste_noeuds);
 }
 
 void liberer_commodites(CellCommodite* commodites){
@@ -329,5 +297,3 @@ void liberer_Reseau(Reseau* R){
     liberer_commodites(R->commodites);
     free(R);
 }
-
-

@@ -80,6 +80,7 @@ int main(int argc , char *argv[]){
 	tpsInit = clock();
 	Reseau* reseauAQ = reconstitueReseauArbre(chaines);
 	tpsFin = clock();
+	
 	liberer_Reseau(reseauAQ);
 
 	tpsCalcul = 1000*((double)(tpsFin - tpsInit)) / CLOCKS_PER_SEC;
