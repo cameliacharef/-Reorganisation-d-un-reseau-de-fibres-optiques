@@ -29,6 +29,9 @@ ChaineMain.o: ChaineMain.c
 GenerationAleatoireMain.o: GenerationAleatoireMain.c
 	$(CC) $(FLAGS) -c -o $@ $^ -lm
 
+Graphe.o : Graphe.c
+	$(CC) $(FLAGS) -c -o $@ $^ -lm
+
 Hachage.o: Hachage.c
 	$(CC) $(FLAGS) -c -o $@ $^ -lm
 
