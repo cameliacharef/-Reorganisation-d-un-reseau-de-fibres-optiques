@@ -235,6 +235,7 @@ int comptePointsTotal(Chaines *C){
 Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax){
     Chaines* liste_chaines = creer_Chaines();
     liste_chaines->gamma = 3;
+    liste_chaines->nbChaines=0;
 
     //Création d'un ensemble de chaînes
     for(int i=0; i<nbChaines;i++){

@@ -23,7 +23,7 @@ int main(int argc , char *argv[]){
     }
 
 	//Ouverture du fichier d'écriture
-	FILE * fe = fopen("comparaisonTpsCalcul", "w");
+	FILE * fe = fopen("comparaisonTpsCalcul.txt", "w");
 
 	//Initialisation des variables et fermeture du fichier de lecture
 	clock_t tpsInit;
