@@ -3,7 +3,18 @@
 #include <math.h>
 #include "Graphe.h"
 
+Arete* creerArete(int u,int v){
+	Arete* a= (Arete*)malloc(sizeof(Arete));
+	a->u = u;
+	a->v = v;
+	return a;
+}
 
+void insereArete(Arete* a,Cellule_arete* c){
+	Cellule_arete* new = (Cellule_arete*)malloc(sizeof(Cellule_arete));
+	new->suiv = c;
+	c=new;
+}
 
 Graphe* creerGraphe(Reseau* r){
 	//Allocation et initialisation d'un graphe
@@ -25,11 +36,14 @@ Graphe* creerGraphe(Reseau* r){
         G->T_som[i]->x =courant->nd->x;
         G->T_som[i]->y =courant->nd->y;
         G->T_som[i]->L_voisin=(Cellule_arete*)malloc(sizeof(Cellule_arete));
+
+		//Création de la liste des voisins
         while(courant->voisins){
-            G->T_som[i]->L_voisin->a->u=G->T_som[i]->num;
-            G->T_som[i]->L_voisin->a->v=courant->voisins->num;
+            Arête* a = creerArete(G->T_som[i]->num,courant->voisins->num); //Les arêtes sont incidentes au sommet i
+			insereArete(a,G->T_som[i]->L_voisin);
             courant->voisins = courant->voisins->suiv;
         }
+		
         courant=courant->suiv;
         i++;
 	}
