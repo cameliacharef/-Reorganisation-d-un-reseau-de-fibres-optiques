@@ -6,7 +6,7 @@
 #include "SVGwriter.h"
 #include "Chaine.h"
 
-
+/*Crée un point de coordonnées (x,y)*/
 CellPoint * creer_cellPoint(double x, double y){
     CellPoint * point = (CellPoint *)malloc(sizeof(CellPoint));
     point->x = x;
@@ -16,15 +16,17 @@ CellPoint * creer_cellPoint(double x, double y){
     return point;
 }
 
+/*Crée une chaîne vide numérotée par un entier mis en paramètre*/
 CellChaine * creer_cellChaine(int numero){
     CellChaine * chaine_points = (CellChaine *)malloc(sizeof(CellChaine));
     chaine_points->numero = numero;
-    chaine_points->points = NULL; //Liste des points initialise a NULL  
+    chaine_points->points = NULL; 
     chaine_points->suiv = NULL;
 
     return chaine_points;
 }
 
+/*Compte le nombre de points dans la liste chaînée de points*/
 int nombre_points(CellPoint * points){
     int nb = 0;
     while(points){
@@ -34,15 +36,17 @@ int nombre_points(CellPoint * points){
     return nb;
 }
 
+/*Allocation et création d'un ensemble de chaînes vide. Le nombre gamma est initialisé à 0.*/
 Chaines * creer_Chaines(){
-    Chaines * chainesf = (Chaines *)malloc(sizeof(Chaines));
-    chainesf->gamma = 0; // nbgamma initialise a 0
-    chainesf->nbChaines = 0; //nbchaine initialise a 0
-    chainesf->chaines = NULL;
+    Chaines * chaines = (Chaines *)malloc(sizeof(Chaines));
+    chaines->gamma = 0;
+    chaines->nbChaines = 0;
+    chaines->chaines = NULL;
 
-    return chainesf;
+    return chaines;
 }
 
+/*Libère la liste chaînée des points*/
 void liberer_cellPoint(CellPoint *point) {
     while (point != NULL) {
         CellPoint * temp = point; 
@@ -51,6 +55,7 @@ void liberer_cellPoint(CellPoint *point) {
     }
 }
 
+/*Libère la liste chaînée des chaînes*/
 void liberer_cellChaine(CellChaine *chaine) {
     while (chaine != NULL) {
         liberer_cellPoint(chaine->points);
@@ -60,6 +65,7 @@ void liberer_cellChaine(CellChaine *chaine) {
     }
 }
 
+/*Libère l'ensemble des chaînes*/
 void liberer_Chaines(Chaines *chaines) {
     if (chaines != NULL) {
         liberer_cellChaine(chaines->chaines); 
@@ -67,19 +73,20 @@ void liberer_Chaines(Chaines *chaines) {
     }
 }
 
-// inserer en tete de la liste de points de chaine 
+/*Insère en tête de la liste des de chaînes un point de coordonnées (x,y)*/
 void inserer_point(CellChaine * chaine, double x, double y){
     CellPoint * new_point = creer_cellPoint(x, y);
     new_point->suiv = chaine->points;
     chaine->points = new_point;
 }
 
-// inserer en tete de la liste de chaines de CHAINE 
+/*Insère une liste chaînée de chaînes en tête de la liste chaînée existante de listes_chaines*/
 void inserer_cellChaine(Chaines * liste_chaines, CellChaine * chaine){
     chaine->suiv = liste_chaines->chaines;
     liste_chaines->chaines = chaine;
 }
 
+/*Crée un ensemble de chaînes en lisant le fichier f*/
 Chaines *lectureChaines(FILE *f) {
 
     assert(f != NULL);
@@ -127,6 +134,7 @@ Chaines *lectureChaines(FILE *f) {
     return chaines;
 }
 
+/*Crée un fichier f à partir des chaînes de C*/
 void ecrireChaines(Chaines *C, FILE *f){
     assert(f != NULL);
 
@@ -152,6 +160,7 @@ void ecrireChaines(Chaines *C, FILE *f){
     }
 } 
 
+/*Affiche les chaînes de C en créant un fichier au format SVG*/
 void afficheChainesSVG(Chaines *C, char* nomInstance){
     double maxx=0,maxy=0,minx=1e6,miny=1e6;
     CellChaine *ccour;
@@ -191,6 +200,7 @@ void afficheChainesSVG(Chaines *C, char* nomInstance){
     SVGfinalize(&svg);
 }
 
+/*Calcule la longueur totale d'une chaîne*/
 double longueurChaine(CellChaine *c){
     if(nombre_points(c->points) < 2){
         return 0.0;
@@ -204,6 +214,7 @@ double longueurChaine(CellChaine *c){
     return distance;
 }
 
+/*Calcule la longueur totale des chaînes*/
 double longueurTotale(Chaines *C){
     if(!C){
         return 0.0;
@@ -222,6 +233,7 @@ double longueurTotale(Chaines *C){
     return longueur;
 }
 
+/*Compte le nombre de points présents dans les chaînes de C*/
 int comptePointsTotal(Chaines *C){
     int nb_points = 0;
     CellChaine * courant = C->chaines;
@@ -232,6 +244,7 @@ int comptePointsTotal(Chaines *C){
     return nb_points;
 }
 
+/*Génère aléatoirement des points de coordonnées d'entre (0,0) et (xmax,ymax) et crée un ensemble de chaînes à partir de ceux-ci*/
 Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax){
     Chaines* liste_chaines = creer_Chaines();
     liste_chaines->gamma = 3;

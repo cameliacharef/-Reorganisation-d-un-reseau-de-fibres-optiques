@@ -4,16 +4,18 @@
 #include "Reseau.h"
 #include "Hachage.h"
 
-
+/*Retourne une clé*/
 int fonction_clef(int x, int y){
     return  (int) ( y + (x + y)*(x + y + 1)/2 );
 }
 
+/*Utilise une fonction de hachage pour retourner une clé*/
 int fonction_hachage(int k, int taille){
     double A = (sqrt(5) - 1) / 2;
-    return (int) taille * (k * A - (int) k * A) ; // arrondi au plus bas : (int)
+    return (int) taille * (k * A - (int) k * A) ;
 }
 
+/*Libère une table de hachage*/
 void liberer_Hachage(TableHachage * H){
     int m = H->tailleMax;
     CellNoeud ** tab_listeH = H->T;
@@ -32,6 +34,8 @@ void liberer_Hachage(TableHachage * H){
     free(H);
 }
 
+/*Recherche un noeud de coordonnées (x,y) dans la table de hachage.
+S'il n'existe pas, alors le noeud est créé et inséré dans la table et dans le réseau.*/
 Noeud * rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y){
     // Recherche dans la table de hachage 
     CellNoeud ** tab_listeH = H->T;
@@ -47,21 +51,21 @@ Noeud * rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y
     }
 
 
-    // Si on le trouve pas , on le crée et ajoute au reseau et a la table de hachage 
-    // creation du noeud 
+    // Si on ne le trouve pas , on le crée et on l'ajoute dans le réseau et dans la table de hachage 
+    // création du noeud 
     Noeud* noeud_recherche = (Noeud *)malloc(sizeof(Noeud));
     noeud_recherche->x = x; 
     noeud_recherche->y = y;
     noeud_recherche->num = R->nbNoeuds + 1;
     noeud_recherche->voisins = NULL;
 
-    // ajout en tete la liste de noeud du reseau et update la liste 
-    // Creation cellnoeud
+    // ajout en tête la liste de noeud du réseau et mise à jour de la liste 
+    // Création d'un CellNoeud
     CellNoeud * ajout_noeud = (CellNoeud *)malloc(sizeof(CellNoeud));
     ajout_noeud->nd = noeud_recherche;
     ajout_noeud->suiv = NULL;
 
-    // Ajout en tete
+    // Ajout en tête
     ajout_noeud->suiv = R->noeuds;
     R->noeuds = ajout_noeud;
 
@@ -72,7 +76,7 @@ Noeud * rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y
     ajout_noeudH->nd = noeud_recherche;
     ajout_noeudH->suiv = NULL;
 
-    // Ajout en tete de la liste chaine d'indice_insertion 
+    // Ajout en tête de la liste chaînee d'indice indice_insertion 
     ajout_noeudH->suiv = tab_listeH[indice_insertion]; // insertion en tete de la liste chainee a lindice indique par fct hachage
     tab_listeH[indice_insertion] = ajout_noeudH;
     H->nbElement = H->nbElement + 1; // ajout de l'element
@@ -81,7 +85,7 @@ Noeud * rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y
 
 }
 
-
+/*Allocation et création d'une table de hachage vide de taille tailleMax*/
 TableHachage * initialiser_tableH(int tailleMax){
     TableHachage *H = (TableHachage *)(malloc(sizeof(TableHachage)));
     CellNoeud ** T = (CellNoeud **)(malloc(sizeof(CellNoeud *) * tailleMax));
@@ -94,6 +98,7 @@ TableHachage * initialiser_tableH(int tailleMax){
     return H;
 }
 
+/*Reconstitution du réseau à partir des chaînes de C et en utilisant une table de hachage de taille M*/
 Reseau* reconstitueReseauHachage(Chaines *C, int M){
     // Creation de la table de hachage de taille M 
     TableHachage * t_hachage = initialiser_tableH(M);
@@ -164,4 +169,3 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
     liberer_Hachage(t_hachage);
     return R;
 }
-

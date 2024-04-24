@@ -3,6 +3,7 @@
 #include <math.h>
 #include "ArbreQuat.h"
 
+/*Détermine les coordonnées minimales et maximales des points qui constituent les chaînes du réseau.*/
 void chaineCoordMinMax(Chaines* C, double* xmin, double* ymin, double* xmax, double* ymax){
     if (C == NULL) {
         return;
@@ -38,6 +39,7 @@ void chaineCoordMinMax(Chaines* C, double* xmin, double* ymin, double* xmax, dou
     }
 }
 
+/*Crée une cellule d'un arbre quaternaire, de centre (xc,yc), de longeur coteX et de hauteur coteY*/
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY){
     ArbreQuat * arbreQ = (ArbreQuat *)malloc(sizeof(ArbreQuat));
     arbreQ->xc = xc;
@@ -53,7 +55,7 @@ ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY){
     return arbreQ;
 }
 
-// ERRORS
+/*Insère un noeud dans un arbre quaternaire*/
 void insererNoeudArbre(Noeud * n, ArbreQuat ** a, ArbreQuat * parent){
     //Il existe trois cas d'insertion du noeud n
     //Cas 1 : Si l'arbre est vide
@@ -137,7 +139,8 @@ void insererNoeudArbre(Noeud * n, ArbreQuat ** a, ArbreQuat * parent){
     }
 }
 
-
+/*Recherche un noeud de coordonnées (x,y) dans l'arbre quaternaire.
+S'il n'est pas trouvé, le noeud est créé et il est inséré dans l'arbre et dans le réseau.*/
 Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, double x, double y){
     // cas 1 : arbre vide 
     if(*a == NULL ){
@@ -224,6 +227,7 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
     }
 }
 
+/*Libère l'arbre quaternaire.*/
 void libererArbreQuat(ArbreQuat * a){
     if(!a){
         return;
@@ -241,6 +245,7 @@ void libererArbreQuat(ArbreQuat * a){
     }
 }
 
+/*Reconstitue le réseau à partir des chaînes et en utilisant l'arbre quaternaire*/
 Reseau* reconstitueReseauArbre(Chaines* C){
     double xmin;
     double ymin;
@@ -316,7 +321,3 @@ Reseau* reconstitueReseauArbre(Chaines* C){
     libererArbreQuat(arbreQ);
     return R;
 }
-
-
-
-
