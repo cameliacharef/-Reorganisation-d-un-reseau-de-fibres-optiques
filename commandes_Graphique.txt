@@ -1,0 +1,20 @@
+# Graphe Liste chainee
+
+Gnuplot
+plot "tempsCalculGenAleatLC.txt" using 1:2 with lines title "ListeChainee"
+set terminal png
+set output 'graphLC.png'
+replot
+
+
+# Graphe Arbre et table de hachage
+
+Gnuplot
+plot "tempsCalculGenAleatHAQ.txt" using 1:2 with lines title "Table Hachage 10"
+replot "tempsCalculGenAleatHAQ.txt" using 1:3 with lines title "Table Hachage 100"
+replot "tempsCalculGenAleatHAQ.txt" using 1:4 with lines title "Table Hachage 1000"
+replot "tempsCalculGenAleatHAQ.txt" using 1:5 with lines title "Table Hachage 10000"
+replot "tempsCalculGenAleatHAQ.txt" using 1:6 with lines title "ARBRE"
+set terminal png
+set output 'graphHAQ.png'
+replot

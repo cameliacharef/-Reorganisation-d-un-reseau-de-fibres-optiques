@@ -2,7 +2,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <assert.h>
-
+#include <time.h>
 #include "SVGwriter.h"
 #include "Chaine.h"
 
@@ -245,24 +245,27 @@ int comptePointsTotal(Chaines *C){
 }
 
 /*Génère aléatoirement des points de coordonnées d'entre (0,0) et (xmax,ymax) et crée un ensemble de chaînes à partir de ceux-ci*/
-Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax){
+Chaines* generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ymax){
+    srand(time(NULL));
     Chaines* liste_chaines = creer_Chaines();
     liste_chaines->gamma = 3;
-    liste_chaines->nbChaines=0;
+    liste_chaines->nbChaines = nbChaines;
 
     //Création d'un ensemble de chaînes
-    for(int i=0; i<nbChaines;i++){
+    for(int i = 0; i < nbChaines; i++){
         //Création d'une nouvelle chaîne
-        CellChaine* chaine = creer_cellChaine(i+1);
+        CellChaine * chaine = creer_cellChaine(i+1);
 
         //Génération aléatoire de points dans la chaîne créée
-        for(int j=0;j<nbPointsChaine;j++){
-            inserer_point(chaine,(double)(rand() % xmax),(double)(rand() % ymax));
+        for(int j = 0; j < nbPointsChaine; j++){
+            double x = (double)(rand() % xmax);
+            double y = (double)(rand() % ymax);
+            inserer_point(chaine, x, y);
         }
 
         //Insertion d'une chaîne dans la liste de chaînes
-        inserer_cellChaine(liste_chaines,chaine);
-        liste_chaines->nbChaines = liste_chaines->nbChaines +1 ;
+        inserer_cellChaine(liste_chaines, chaine);
+        //liste_chaines->nbChaines = liste_chaines->nbChaines + 1 ;
     }
     return liste_chaines;
 }

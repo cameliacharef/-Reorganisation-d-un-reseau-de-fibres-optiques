@@ -39,6 +39,6 @@ void inserer_cellChaine(Chaines * liste_chaines, CellChaine * chaine);
 void liberer_cellPoint(CellPoint *point);
 void liberer_cellChaine(CellChaine *chaine);
 void liberer_Chaines(Chaines *chaines);
-Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax);
+Chaines * generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ymax);
 
 #endif	
