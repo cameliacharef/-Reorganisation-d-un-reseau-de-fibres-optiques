@@ -102,7 +102,7 @@ Chaines *lectureChaines(FILE *f) {
     fgets(buffer, 256, f);
     sscanf(buffer, "Gamma: %d", &Gamma);
 
-    // Creation de la structure de l'ensemble des chaines a retourner 
+    // Création de la structure de l'ensemble des chaînes à retourner 
     Chaines* chaines = creer_Chaines();
     chaines->nbChaines = NbChain;
     chaines->gamma = Gamma;
@@ -115,7 +115,7 @@ Chaines *lectureChaines(FILE *f) {
 
         fscanf(f, "%d %d ", &numero_chaine, &nb_points);
 
-        //Creation de la chaine
+        //Création de la chaîne
         CellChaine *nouvel_chaine = creer_cellChaine(numero_chaine);
 
         // Création de la liste de points
@@ -126,7 +126,7 @@ Chaines *lectureChaines(FILE *f) {
         
             inserer_point(nouvel_chaine, x, y);
         }
-        //inserer chaque chaine dans notre ensemble de chaine 
+        //Insérer chaque chaîne dans notre ensemble de chaînes 
         inserer_cellChaine(chaines, nouvel_chaine);
 
     }
@@ -245,27 +245,25 @@ int comptePointsTotal(Chaines *C){
 }
 
 /*Génère aléatoirement des points de coordonnées d'entre (0,0) et (xmax,ymax) et crée un ensemble de chaînes à partir de ceux-ci*/
-Chaines* generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ymax){
+Chaines* generationAleatoire(int nbChaines,int nbPointsChaine,int xmax,int ymax){
     srand(time(NULL));
     Chaines* liste_chaines = creer_Chaines();
     liste_chaines->gamma = 3;
-    liste_chaines->nbChaines = nbChaines;
+    liste_chaines->nbChaines=0;
 
     //Création d'un ensemble de chaînes
-    for(int i = 0; i < nbChaines; i++){
+    for(int i=0; i<nbChaines;i++){
         //Création d'une nouvelle chaîne
-        CellChaine * chaine = creer_cellChaine(i+1);
+        CellChaine* chaine = creer_cellChaine(i+1);
 
         //Génération aléatoire de points dans la chaîne créée
-        for(int j = 0; j < nbPointsChaine; j++){
-            double x = (double)(rand() % xmax);
-            double y = (double)(rand() % ymax);
-            inserer_point(chaine, x, y);
+        for(int j=0;j<nbPointsChaine;j++){
+            inserer_point(chaine,(double)(rand() % xmax),(double)(rand() % ymax));
         }
 
         //Insertion d'une chaîne dans la liste de chaînes
-        inserer_cellChaine(liste_chaines, chaine);
-        //liste_chaines->nbChaines = liste_chaines->nbChaines + 1 ;
+        inserer_cellChaine(liste_chaines,chaine);
+        liste_chaines->nbChaines = liste_chaines->nbChaines +1 ;
     }
     return liste_chaines;
 }
