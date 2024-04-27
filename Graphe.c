@@ -135,15 +135,3 @@ int plus_petit_nbChaine(Graphe* G, int u , int v){
 int reorganiseReseau(Reseau *r){
 	return 0;
 }
-int main(){
-	FILE *f = fopen("00014_burma.cha","r");
-
-    Chaines *c = lectureChaines(f); 
-    Reseau *res = reconstitueReseauArbre(c); //ici nous utilisons reconstitueReseauArbre car nous avons vue avec l'exo6 que c'est la maniere de reconstituer le reseau la plus rapide
-	Graphe * g = creerGraphe(res);
-	int t = plus_petit_nbChaine(g, 3, 6);
-	printf("%d\n", t);
-    liberer_Chaines(c);
-	liberer_Reseau(res);
-	return 0;
-}
