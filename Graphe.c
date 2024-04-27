@@ -131,6 +131,123 @@ int plus_petit_nbChaine(Graphe* G, int u , int v){
 	return -1; // si on trouves pas de chaine de u a v 
 }
 
+void libererGraphe(Graphe* G){
+    for (int i = 1; i <= G->nbsom; i++){
+        Sommet* s = G->T_som[i];
+        Cellule_arete* voisins = s->L_voisin;
+        while(voisins){
+            if (voisins->a->u == s->num){
+                free(voisins->a);
+            }
+            Cellule_arete* courant = voisins;
+            voisins = voisins->suiv;
+            free(courant);
+        }
+        free(s);
+    }
+    free(G->T_som);
+    free(G->T_commod);
+    free(G);
+}
+
+
+void libererListe(Cellule_file* liste) {
+    Cellule_file* temp;
+    while (liste != NULL) {
+        temp = liste;
+        liste = liste->suiv;
+        free(temp);
+    }
+}
+
+void ajoute_en_tete(Cellule_file* L, int val){
+	Cellule_file * nouvsom = (Cellule_file *)malloc(sizeof(Cellule_file));
+	nouvsom->val = val;
+	nouvsom->suiv = L;
+	L = nouvsom;
+}
+
+
+void desalloue(Cellule_file *L){
+	Cellule_file *cour,*prec;
+	cour = L;
+	while(cour != NULL){
+		prec = cour;
+		cour = cour->suiv;
+		free(prec);
+	}
+	L = NULL;
+}
+
+
+/*parcours en largeur pour trouver un chemin entre u et v , stocke l'arborescence des chemins issus du sommet u*/
+Cellule_file * chaine_arborescence(Graphe * G, int u , int  v){
+	if (u == v){
+        return NULL ; // le chemin nulle 
+    }
+	int distance[G->nbsom]; // stocker les distances de chaque sommet
+    int visite[G->nbsom]; // sommets visités
+    int sommet_precedant[G->nbsom]; //on creer un tableau pour avoir le sommet precedent de chaque sommet
+
+    // Initialisation des tableaux de distances et de visite
+    for (int i = 0; i < G->nbsom; i++) {
+        distance[i] = -1; // Initialiser les distances à -1
+        visite[i] = 0; // Aucun sommet n'a été visité
+        sommet_precedant[i] = -1;
+    }
+
+	S_file * F  = (S_file*) malloc(sizeof(S_file));
+    Init_file(F);
+	visite[u - 1] = 1; // u deja visite
+	distance[u - 1] = 0; // u a u = 0
+    sommet_precedant[u-1] = -1; 
+	enfile(F, u); // ajout de u dans file F
+
+	while(!(estFileVide(F))){
+		int sommet = defile(F); // Retirer le sommet en tête de file
+
+		Cellule_arete * voisins = G->T_som[sommet - 1]->L_voisin;
+        while (voisins != NULL){
+			// le sommet voisin 
+			int sommet_voisin;
+			if(sommet == voisins->a->u){
+				sommet_voisin = voisins->a->v;
+			}
+			else {
+				sommet_voisin = voisins->a->u;
+			}
+			// si pas deja visite
+			if(visite[sommet_voisin - 1] == 0){
+				visite[sommet_voisin - 1] = 1; // On le visite;
+				enfile(F, sommet_voisin);
+				distance[sommet_voisin - 1] = distance[sommet - 1] + 1; // A chaque fois on rajoute 1 a distance
+                sommet_precedant[sommet_voisin - 1] = sommet; // Maj du predecesseur 
+			}
+			voisins = voisins->suiv;
+		}
+	}
+
+    // Initialiser chaine d'entier 
+    Cellule_file * chaine = NULL;
+
+    // Construction de la chaîne de u à v en utilisant les prédécesseurs
+    if(sommet_precedant[v - 1] == -1){
+        return chaine; //non connexe , si v pas de predecesseur retourne liste vide 
+    }
+
+    int tmp_sommet = v; 
+
+    while (tmp_sommet != u){
+        ajoute_en_tete(chaine, tmp_sommet);
+        tmp_sommet = sommet_precedant[tmp_sommet -1];
+    }
+    ajoute_en_tete(chaine, u);
+
+    liberer_file(F);
+
+    return chaine;
+}
+
 
 int reorganiseReseau(Reseau *r){
 	return 0;
