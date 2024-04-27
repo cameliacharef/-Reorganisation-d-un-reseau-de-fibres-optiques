@@ -39,6 +39,6 @@ int reorganiseReseau(Reseau *r);
 void libererGraphe(Graphe* G);
 void libererListe(Cellule_file* liste);
 void ajoute_en_tete(Cellule_file* L, int val);
-void desalloue(Cellule_file *L);
+void liberer(Cellule_file *L);
 
 # endif

@@ -168,7 +168,7 @@ void ajoute_en_tete(Cellule_file* L, int val){
 }
 
 
-void desalloue(Cellule_file *L){
+void liberer(Cellule_file *L){
 	Cellule_file *cour,*prec;
 	cour = L;
 	while(cour != NULL){
@@ -176,7 +176,7 @@ void desalloue(Cellule_file *L){
 		cour = cour->suiv;
 		free(prec);
 	}
-	L = NULL;
+	free(L);
 }
 
 
@@ -249,6 +249,46 @@ Cellule_file * chaine_arborescence(Graphe * G, int u , int  v){
 }
 
 
-int reorganiseReseau(Reseau *r){
-	return 0;
+int reorganiseReseau(Reseau* r){
+    /* on crée le graphe correspondant au réseau */
+    Graphe* G = creerGraphe(r);
+
+    /* on crée un matrice sommet-sommet pour compter le nombre de chaines passant par chaque arete */
+    int mat_som_som[G->nbsom][G->nbsom];
+	// Initialisation de la matrice à 0
+	for (int i = 0; i < G->nbsom; i++) {
+        for (int j = 0; j < G->nbsom; j++) {
+            mat_som_som[i][j] = 0;
+        }
+	}
+    /* on calcule la plus courte chaine pour chaque commodité */
+    for (int i = 0; i < G->nbcommod; i++){
+        Cellule_file * L = chaine_arborescence(G, G->T_commod[i].e1, G->T_commod[i].e2); // Plus courte chaine 
+        int u, v;
+
+        Cellule_file * Lcour = L;
+        v = Lcour->val;
+        Lcour = Lcour->suiv;
+        while(Lcour){
+            u = v;
+            v = Lcour->val;
+            mat_som_som[u][v]++; // On incrémente le nombre de chaînes passant par l'arête (u, v)
+            Lcour = Lcour->suiv;
+        }
+
+        liberer(L);
+    }
+    
+    /* on retourne le res: vrai si gamma est garantie, false sinon */
+    for (int i = 0; i < G->nbcommod; i++){
+        for (int j = 0; i < G->nbcommod; i++){
+            if (mat_som_som[i][j] >= G->gamma){ // Si le nombre de chaines passant par l'arete depasse gamma
+                libererGraphe(G);
+                return 0; // retourne faux
+            }
+        }
+    }
+
+    libererGraphe(G); 
+    return 1; // retourne vrai gamma est garanti pour toutes les arêtes
 }
