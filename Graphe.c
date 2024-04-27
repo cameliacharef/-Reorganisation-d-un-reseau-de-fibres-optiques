@@ -70,11 +70,80 @@ Graphe* creerGraphe(Reseau* r){
 	
 	return G;
 }
-int plus_petit_nbChaine(Graphe* g, int u , int v){
+
+void liberer_file(S_file* F){
+	while(!estFileVide(F)){
+		defile(F);
+	}
+	free(F);
+}
+
+// Parcours en largeur 
+int plus_petit_nbChaine(Graphe* G, int u , int v){
 	if (u == v){
         return 0 ; // le chemin nulle 
     }
-}
-int reorganiseReseau(Reseau *r){
+	int distance[G->nbsom]; // stocker les distances de chaque sommet
+    int visite[G->nbsom]; // sommets visités
 
+    // Initialisation des tableaux de distances et de visite
+    for (int i = 0; i < G->nbsom; i++) {
+        distance[i] = -1; // Initialiser les distances à -1
+        visite[i] = 0; // Aucun sommet n'a été visité
+    }
+
+	S_file * F  = (S_file*) malloc(sizeof(S_file));
+    Init_file(F);
+	visite[u - 1] = 1; // u deja visite
+	distance[u - 1] = 0; // u a u = 0
+	enfile(F, u); // ajout de u dans file F
+
+	while(!(estFileVide(F))){
+		int sommet = defile(F); // Retirer le sommet en tête de file
+
+		if (sommet == v){
+			liberer_file(F);
+            return distance[v-1];
+		}
+
+		Cellule_arete * voisins = G->T_som[sommet - 1]->L_voisin;
+        while (voisins != NULL){
+			// le sommet voisin 
+			int sommet_voisin;
+			if(sommet == voisins->a->u){
+				sommet_voisin = voisins->a->v;
+			}
+			else {
+				sommet_voisin = voisins->a->u;
+			}
+			// si pas deja visite
+			if(visite[sommet_voisin - 1] == 0){
+				visite[sommet_voisin - 1] = 1; // On le visite;
+				enfile(F, sommet_voisin);
+				distance[sommet_voisin - 1] = distance[sommet - 1] + 1; // A chaque fois on rajoute 1 a distance 
+			}
+			voisins = voisins->suiv;
+		}
+	}
+
+	liberer_file(F);
+
+	return -1; // si on trouves pas de chaine de u a v 
+}
+
+
+int reorganiseReseau(Reseau *r){
+	return 0;
+}
+int main(){
+	FILE *f = fopen("00014_burma.cha","r");
+
+    Chaines *c = lectureChaines(f); 
+    Reseau *res = reconstitueReseauArbre(c); //ici nous utilisons reconstitueReseauArbre car nous avons vue avec l'exo6 que c'est la maniere de reconstituer le reseau la plus rapide
+	Graphe * g = creerGraphe(res);
+	int t = plus_petit_nbChaine(g, 3, 6);
+	printf("%d\n", t);
+    liberer_Chaines(c);
+	liberer_Reseau(res);
+	return 0;
 }

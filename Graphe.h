@@ -33,6 +33,7 @@ typedef struct {
 } Graphe ;
 
 Graphe* creerGraphe(Reseau* r);
+int plus_petit_nbChaine(Graphe* G, int u , int v);
 int reorganiseReseau(Reseau *r);
 
 # endif
