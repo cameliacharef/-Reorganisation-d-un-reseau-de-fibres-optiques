@@ -33,6 +33,7 @@ typedef struct {
 } Graphe ;
 
 Graphe* creerGraphe(Reseau* r);
+Sommet * creerSommet(int num, double x, double y);
 int plus_petit_nbChaine(Graphe* G, int u , int v);
 Cellule_file * chaine_arborescence(Graphe * G, int u , int  v);
 int reorganiseReseau(Reseau *r);
@@ -40,5 +41,6 @@ void libererGraphe(Graphe* G);
 void libererListe(Cellule_file* liste);
 void ajoute_en_tete(Cellule_file* L, int val);
 void liberer(Cellule_file *L);
+void afficher_graph(Graphe* g);
 
 # endif

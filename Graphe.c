@@ -10,11 +10,20 @@ Arete* creerArete(int u,int v){
 	return a;
 }
 
-void insereArete(Arete* a,Cellule_arete* c){
+void insereArete(Arete* a,Cellule_arete** c){
 	Cellule_arete* new = (Cellule_arete*)malloc(sizeof(Cellule_arete));
 	new->a = a;
-	new->suiv = c;
-	c = new;
+	new->suiv = *c;
+	*c = new;
+}
+
+Sommet * creerSommet(int num, double x, double y){
+	Sommet* s =  (Sommet *)malloc(sizeof(Sommet));
+    s->num = num;
+    s->x = x;
+    s->y = y;
+    s->L_voisin = NULL;
+    return s;
 }
 
 Graphe* creerGraphe(Reseau* r){
@@ -25,22 +34,26 @@ Graphe* creerGraphe(Reseau* r){
 	G->nbcommod = nbCommodites(r);
 	G->T_som = (Sommet**)malloc(G->nbsom * sizeof(Sommet*));
 	G->T_commod = (Commod*)malloc(G->nbcommod * sizeof(Commod));
-	for(int i = 0; i < G->nbsom; i++){
+	/*for(int i = 0; i < G->nbsom; i++){
 		G->T_som[i] = (Sommet*)malloc(sizeof(Sommet));
-	}
-	
-	//Remplissage du tableau des sommets
+	}*/
+
+	//Initialiser sommets avec coordonnes
 	CellNoeud* courant = r->noeuds;
 	while(courant){
 		//initialisation de tous les sommets avec leur coordonnes avec pour chaque sommet leur liste de voisin 
-	        G->T_som[courant->nd->num - 1]->num = courant->nd->num;
-	        G->T_som[courant->nd->num - 1]->x = courant->nd->x;
-	        G->T_som[courant->nd->num - 1]->y = courant->nd->y;
-		G->T_som[courant->nd->num - 1]->L_voisin = NULL;
-
-        	//G->T_som[courant->nd->num - 1]->L_voisin = (Cellule_arete*)malloc(sizeof(Cellule_arete));
-
-
+		/*G->T_som[courant->nd->num - 1] = (Sommet *)malloc(sizeof(Sommet));
+	    G->T_som[courant->nd->num - 1]->num = courant->nd->num;
+	    G->T_som[courant->nd->num - 1]->x = courant->nd->x;
+	    G->T_som[courant->nd->num - 1]->y = courant->nd->y;
+		G->T_som[courant->nd->num - 1]->L_voisin = NULL;*/
+		(G->T_som)[courant->nd->num - 1] = creerSommet(courant->nd->num, courant->nd->x, courant->nd->y);
+		courant = courant->suiv;
+	}
+	//Remplissage du tableau des sommets
+	// Refaire le parcours pour inserer les voisins  
+	courant = r->noeuds;
+	while(courant){
 		//Création de la liste des voisins
 		CellNoeud *voisins = courant->nd->voisins;
         while(voisins){
@@ -48,8 +61,8 @@ Graphe* creerGraphe(Reseau* r){
 			du sommet u et du sommet v dans le graphe.*/
 			if(courant->nd->num < voisins->nd->num){ 
 				Arete* a = creerArete(courant->nd->num, voisins->nd->num); //Les arêtes sont incidentes au sommet i
-				insereArete(a,G->T_som[a->u - 1]->L_voisin); // Ajout dans u
-				insereArete(a,G->T_som[a->v - 1]->L_voisin); // Ajout dans v
+				insereArete(a,&(G->T_som[a->u - 1]->L_voisin)); // Ajout dans u
+				insereArete(a,&(G->T_som[a->v - 1]->L_voisin)); // Ajout dans v
 			}
             
             voisins = voisins->suiv;
@@ -132,7 +145,7 @@ int plus_petit_nbChaine(Graphe* G, int u , int v){
 }
 
 void libererGraphe(Graphe* G){
-    for (int i = 1; i <= G->nbsom; i++){
+    for (int i = 0; i < G->nbsom; i++){
         Sommet* s = G->T_som[i];
         Cellule_arete* voisins = s->L_voisin;
         while(voisins){
@@ -253,6 +266,11 @@ int reorganiseReseau(Reseau* r){
     /* on crée le graphe correspondant au réseau */
     Graphe* G = creerGraphe(r);
 
+	if (G == NULL) {
+        printf("Erreur : Graphe non créé.\n");
+        return 0; // retourne faux
+    }
+
     /* on crée un matrice sommet-sommet pour compter le nombre de chaines passant par chaque arete */
     int mat_som_som[G->nbsom][G->nbsom];
 	// Initialisation de la matrice à 0
@@ -272,13 +290,22 @@ int reorganiseReseau(Reseau* r){
         while(Lcour){
             u = v;
             v = Lcour->val;
-            mat_som_som[u][v]++; // On incrémente le nombre de chaînes passant par l'arête (u, v)
+			printf("Arête (%d, %d)\n", u, v);
+            mat_som_som[u-1][v-1]++; // On incrémente le nombre de chaînes passant par l'arête (u, v)
             Lcour = Lcour->suiv;
         }
 
         liberer(L);
     }
-    
+
+    /* Affichage de la matrice pour le débogage */
+    printf("Matrice sommet-sommet :\n");
+    for (int i = 0; i < G->nbsom; i++) {
+        for (int j = 0; j < G->nbsom; j++) {
+            printf("%d ", mat_som_som[i][j]);
+        }
+        printf("\n");
+    }
     /* on retourne le res: vrai si gamma est garantie, false sinon */
     for (int i = 0; i < G->nbcommod; i++){
         for (int j = 0; i < G->nbcommod; i++){
@@ -291,4 +318,23 @@ int reorganiseReseau(Reseau* r){
 
     libererGraphe(G); 
     return 1; // retourne vrai gamma est garanti pour toutes les arêtes
+}
+
+void afficher_graph(Graphe* g){ //affichage du graph pour dubuggage 
+    int i ;
+    for(i =  0  ; i < g->nbsom ; i++){
+        Sommet * som_present = g->T_som[i]; 
+        printf("Le sommet : %d  de liste voisin  : [" , som_present->num);
+        Cellule_arete * liste_voisin =  som_present->L_voisin;
+        while(liste_voisin){
+            printf("(%d , %d) " , liste_voisin->a->u , liste_voisin->a->v);
+            liste_voisin = liste_voisin->suiv;
+        }
+        printf("] \n");
+    }
+
+    Commod* tab_commod  =  g->T_commod; 
+    for(int j = 0 ; j < g->nbcommod ; j++){
+        printf("Commodite %d du graph :(%d, %d) \n", j+1, tab_commod[j].e1, tab_commod[j].e2);
+    }
 }
