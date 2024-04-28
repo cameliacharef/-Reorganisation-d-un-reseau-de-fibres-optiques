@@ -149,19 +149,21 @@ void libererGraphe(Graphe* G){
         Sommet* s = G->T_som[i];
         Cellule_arete* voisins = s->L_voisin;
         while(voisins){
-            if (voisins->a->u == s->num){
+			//voisins->a->u == s->num
+            if ((voisins->a->u == s->num || voisins->a->v == s->num) && !voisins->a ){
                 free(voisins->a);
             }
             Cellule_arete* courant = voisins;
             voisins = voisins->suiv;
-            free(courant);
+			free(courant);
         }
-        free(s);
+		free(s);
     }
     free(G->T_som);
     free(G->T_commod);
     free(G);
 }
+
 
 
 void libererListe(Cellule_file* liste) {
