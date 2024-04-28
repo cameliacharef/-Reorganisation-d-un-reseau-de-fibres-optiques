@@ -24,7 +24,7 @@ int main(int argc, char** argv){
 
     //Ex 7.1-7.3 
     Graphe* G = creerGraphe(R);
-    /*int u = 5, v = 4;
+    int u = 5, v = 4;
 
     printf("le nomdre d'arete du chemin plus court de %d à %d est %d\n", u, v, plus_petit_nbChaine(G, u, v));
     printf("le chemin est:");
@@ -37,15 +37,15 @@ int main(int argc, char** argv){
     printf("\n");
     
     liberer(L);
-    */
+    
     // Ex 7.4 
-    /*int test = reorganiseReseau(R); //reorganisation du reseau qui va renvoye un vrai (1) ou faux(0)
+    int test = reorganiseReseau(R); //reorganisation du reseau qui va renvoye un vrai (1) ou faux(0)
 
     if(test == 0){
         printf(" le reseau n 'est pas optimise \n");
     }else{
         printf(" le reseau  est  optimise \n");
-    }*/
+    }
 
     afficher_graph(G);
     libererGraphe(G); 

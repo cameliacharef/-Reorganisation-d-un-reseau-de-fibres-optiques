@@ -34,19 +34,11 @@ Graphe* creerGraphe(Reseau* r){
 	G->nbcommod = nbCommodites(r);
 	G->T_som = (Sommet**)malloc(G->nbsom * sizeof(Sommet*));
 	G->T_commod = (Commod*)malloc(G->nbcommod * sizeof(Commod));
-	/*for(int i = 0; i < G->nbsom; i++){
-		G->T_som[i] = (Sommet*)malloc(sizeof(Sommet));
-	}*/
 
 	//Initialiser sommets avec coordonnes
 	CellNoeud* courant = r->noeuds;
 	while(courant){
 		//initialisation de tous les sommets avec leur coordonnes avec pour chaque sommet leur liste de voisin 
-		/*G->T_som[courant->nd->num - 1] = (Sommet *)malloc(sizeof(Sommet));
-	    G->T_som[courant->nd->num - 1]->num = courant->nd->num;
-	    G->T_som[courant->nd->num - 1]->x = courant->nd->x;
-	    G->T_som[courant->nd->num - 1]->y = courant->nd->y;
-		G->T_som[courant->nd->num - 1]->L_voisin = NULL;*/
 		(G->T_som)[courant->nd->num - 1] = creerSommet(courant->nd->num, courant->nd->x, courant->nd->y);
 		courant = courant->suiv;
 	}
@@ -64,10 +56,8 @@ Graphe* creerGraphe(Reseau* r){
 				insereArete(a,&(G->T_som[a->u - 1]->L_voisin)); // Ajout dans u
 				insereArete(a,&(G->T_som[a->v - 1]->L_voisin)); // Ajout dans v
 			}
-            
             voisins = voisins->suiv;
         }
-		
         courant = courant->suiv;
 	}
 	
@@ -82,6 +72,30 @@ Graphe* creerGraphe(Reseau* r){
 	}
 	
 	return G;
+}
+
+void libererGraphe(Graphe* G){
+    if(G){
+        for (int i = 0; i < G->nbsom; i++){
+            Sommet* s = G->T_som[i];
+            Cellule_arete* voisins = s->L_voisin;
+            while(voisins){
+                //voisins->a->u == s->num
+                Cellule_arete* courant = voisins;
+                voisins = voisins->suiv;
+                if ((courant->a->u == s->num || courant->a->v == s->num) && !courant->a ){
+                    free(courant->a);
+                }
+                free(courant);
+            }
+            free(voisins);
+            free(s);
+        }
+        free(G->T_som);
+        free(G->T_commod);
+        free(G); 
+    }
+    
 }
 
 void liberer_file(S_file* F){
@@ -144,25 +158,7 @@ int plus_petit_nbChaine(Graphe* G, int u , int v){
 	return -1; // si on trouves pas de chaine de u a v 
 }
 
-void libererGraphe(Graphe* G){
-    for (int i = 0; i < G->nbsom; i++){
-        Sommet* s = G->T_som[i];
-        Cellule_arete* voisins = s->L_voisin;
-        while(voisins){
-			//voisins->a->u == s->num
-            if ((voisins->a->u == s->num || voisins->a->v == s->num) && !voisins->a ){
-                free(voisins->a);
-            }
-            Cellule_arete* courant = voisins;
-            voisins = voisins->suiv;
-			free(courant);
-        }
-		free(s);
-    }
-    free(G->T_som);
-    free(G->T_commod);
-    free(G);
-}
+
 
 
 
@@ -173,6 +169,7 @@ void libererListe(Cellule_file* liste) {
         liste = liste->suiv;
         free(temp);
     }
+    free(liste);
 }
 
 void ajoute_en_tete(Cellule_file* L, int val){
