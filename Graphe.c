@@ -33,12 +33,12 @@ Graphe* creerGraphe(Reseau* r){
 	CellNoeud* courant = r->noeuds;
 	while(courant){
 		//initialisation de tous les sommets avec leur coordonnes avec pour chaque sommet leur liste de voisin 
-        G->T_som[courant->nd->num - 1]->num = courant->nd->num;
-        G->T_som[courant->nd->num - 1]->x = courant->nd->x;
-        G->T_som[courant->nd->num - 1]->y = courant->nd->y;
+	        G->T_som[courant->nd->num - 1]->num = courant->nd->num;
+	        G->T_som[courant->nd->num - 1]->x = courant->nd->x;
+	        G->T_som[courant->nd->num - 1]->y = courant->nd->y;
 		G->T_som[courant->nd->num - 1]->L_voisin = NULL;
 
-        //G->T_som[courant->nd->num - 1]->L_voisin = (Cellule_arete*)malloc(sizeof(Cellule_arete));
+        	//G->T_som[courant->nd->num - 1]->L_voisin = (Cellule_arete*)malloc(sizeof(Cellule_arete));
 
 
 		//Création de la liste des voisins
