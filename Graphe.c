@@ -3,6 +3,7 @@
 #include <math.h>
 #include "Graphe.h"
 
+/*Alloue et crée une arête*/
 Arete* creerArete(int u,int v){
 	Arete* a= (Arete*)malloc(sizeof(Arete));
 	a->u = u;
@@ -11,10 +12,12 @@ Arete* creerArete(int u,int v){
 }
 
 void insereArete(Arete* a,Cellule_arete** c){
-	Cellule_arete* new = (Cellule_arete*)malloc(sizeof(Cellule_arete));
-	new->a = a;
-	new->suiv = *c;
-	*c = new;
+	if(a){
+        Cellule_arete* new = (Cellule_arete*)malloc(sizeof(Cellule_arete));
+        new->a = a;
+        new->suiv = *c;
+        *c = new;
+    }
 }
 
 Sommet * creerSommet(int num, double x, double y){
@@ -51,10 +54,12 @@ Graphe* creerGraphe(Reseau* r){
         while(voisins){
 			/*Chaque arete {u,v} du graphe est alloue une seule fois, mais apparait dans la liste des voisins
 			du sommet u et du sommet v dans le graphe.*/
-			if(courant->nd->num < voisins->nd->num){ 
-				Arete* a = creerArete(courant->nd->num, voisins->nd->num); //Les arêtes sont incidentes au sommet i
-				insereArete(a,&(G->T_som[a->u - 1]->L_voisin)); // Ajout dans u
-				insereArete(a,&(G->T_som[a->v - 1]->L_voisin)); // Ajout dans v
+			if(courant->nd->num < voisins->nd->num){
+                Arete* a = creerArete(courant->nd->num, voisins->nd->num);
+                insereArete(a,&(G->T_som[a->u - 1]->L_voisin)); // Ajout dans u
+                insereArete(a,&(G->T_som[a->v - 1]->L_voisin)); // Ajo
+				 //Les arêtes sont incidentes au sommet i
+				
 			}
             voisins = voisins->suiv;
         }
@@ -72,30 +77,6 @@ Graphe* creerGraphe(Reseau* r){
 	}
 	
 	return G;
-}
-
-void libererGraphe(Graphe* G){
-    if(G){
-        for (int i = 0; i < G->nbsom; i++){
-            Sommet* s = G->T_som[i];
-            Cellule_arete* voisins = s->L_voisin;
-            while(voisins){
-                //voisins->a->u == s->num
-                Cellule_arete* courant = voisins;
-                voisins = voisins->suiv;
-                if ((courant->a->u == s->num || courant->a->v == s->num) && !courant->a ){
-                    free(courant->a);
-                }
-                free(courant);
-            }
-            free(voisins);
-            free(s);
-        }
-        free(G->T_som);
-        free(G->T_commod);
-        free(G); 
-    }
-    
 }
 
 void liberer_file(S_file* F){
@@ -157,10 +138,6 @@ int plus_petit_nbChaine(Graphe* G, int u , int v){
 
 	return -1; // si on trouves pas de chaine de u a v 
 }
-
-
-
-
 
 void libererListe(Cellule_file* liste) {
     Cellule_file* temp;
@@ -336,4 +313,28 @@ void afficher_graph(Graphe* g){ //affichage du graph pour dubuggage
     for(int j = 0 ; j < g->nbcommod ; j++){
         printf("Commodite %d du graph :(%d, %d) \n", j+1, tab_commod[j].e1, tab_commod[j].e2);
     }
+}
+
+void libererCellAretes(Cellule_arete* c){
+	Cellule_arete* tmp;
+	while(c){
+		tmp=c;
+		free(tmp->a);
+		//free(tmp);
+		c=c->suiv;
+	}
+}
+
+void libererSommet(Sommet* s){
+	libererCellAretes(s->L_voisin);
+	free(s);
+}
+
+void libererGraphe(Graphe *G){
+	for(int i = 0; i < G->nbsom ; i++){
+		libererSommet(G->T_som[i]);
+	}
+	free(G->T_som);
+	free(G->T_commod);
+	free(G);
 }

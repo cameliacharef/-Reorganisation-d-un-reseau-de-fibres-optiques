@@ -28,7 +28,7 @@ int main(int argc, char** argv){
 
     printf("le nomdre d'arete du chemin plus court de %d à %d est %d\n", u, v, plus_petit_nbChaine(G, u, v));
     printf("le chemin est:");
-    Cellule_file* L = chaine_arborescence(G, u, v);
+    /*Cellule_file* L = chaine_arborescence(G, u, v);
     Cellule_file *Lcour = L;
     while(Lcour){
         printf("%d ", Lcour->val);
@@ -45,7 +45,7 @@ int main(int argc, char** argv){
         printf(" le reseau n 'est pas optimise \n");
     }else{
         printf(" le reseau  est  optimise \n");
-    }
+    }*/
 
     afficher_graph(G);
     libererGraphe(G); 

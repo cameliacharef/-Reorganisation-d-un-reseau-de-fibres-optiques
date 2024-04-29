@@ -42,5 +42,7 @@ void libererListe(Cellule_file* liste);
 void ajoute_en_tete(Cellule_file* L, int val);
 void liberer(Cellule_file *L);
 void afficher_graph(Graphe* g);
+void libererCellArete(Cellule_arete* c);
+void libererSommet(Sommet* s);
 
 # endif

@@ -5,6 +5,21 @@ PROGRAMS = ChaineMain ReconstitueReseau main GenerationAleatoireMain ReorganiseR
 
 all: $(PROGRAMS)
 
+ChaineMain: ChaineMain.o Chaine.o SVGwriter.o
+	$(CC) $(FLAGS) -o $@ $^ -lm
+
+main: main.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
+	$(CC) $(FLAGS) -o $@ $^ -lm
+
+GenerationAleatoireMain: GenerationAleatoireMain.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
+	$(CC) $(FLAGS) -o $@ $^ -lm
+
+ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
+	$(CC) $(FLAGS) -o $@ $^ -lm
+
+ReorganiseReseau: ReorganiseReseau.o Graphe.o Reseau.o Struct_File.o SVGwriter.o Chaine.o ArbreQuat.o
+	$(CC) $(FLAGS) -o $@ $^ -lm
+	
 ArbreQuat.o: ArbreQuat.c
 	$(CC) $(FLAGS) -c -o $@ $^ -lm
 
@@ -40,21 +55,6 @@ main.o: main.c
 
 ReorganiseReseau.o: ReorganiseReseau.c
 	$(CC) $(FLAGS) -c -o $@ $^ -lm
-
-ReorganiseReseau: ReorganiseReseau.o Graphe.o Reseau.o Struct_File.o SVGwriter.o Chaine.o ArbreQuat.o
-	$(CC) $(FLAGS) -o $@ $^ -lm
-
-ChaineMain: ChaineMain.o Chaine.o SVGwriter.o
-	$(CC) $(FLAGS) -o $@ $^ -lm
-
-main: main.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
-	$(CC) $(FLAGS) -o $@ $^ -lm
-
-GenerationAleatoireMain: GenerationAleatoireMain.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
-	$(CC) $(FLAGS) -o $@ $^ -lm
-
-ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
-	$(CC) $(FLAGS) -o $@ $^ -lm
 
 clean:
 	rm -rf $(OBJECTS) $(PROGRAMS) *.o
