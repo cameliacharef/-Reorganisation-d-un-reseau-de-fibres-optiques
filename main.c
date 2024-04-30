@@ -2,6 +2,7 @@
 #include <stdlib.h> 
 #include <assert.h>
 #include <time.h>
+#include <string.h>
 #include "Chaine.h"
 #include "Reseau.h"
 #include "SVGwriter.h"
@@ -11,11 +12,10 @@
 int main(int argc , char *argv[]){
 	//Ouverture du fichier de lecture
 	if(argc != 2){
-        printf("Il faut 1 argument : le nom du fichier .cha.\n");
+        printf("Il faut 1 argument : le nom du fichier d'extension .cha.\n");
         return 0;
     }
     char *nomfic = argv[1];
-
     FILE * fl = fopen(nomfic, "r");
     if (fl == NULL) {
         printf("Error opening file\n");
@@ -23,7 +23,12 @@ int main(int argc , char *argv[]){
     }
 
 	//Ouverture du fichier d'écriture
-	FILE * fe = fopen("comparaisonTpsCalcul.txt", "w");
+	char* c = strchr(nomfic,'.');
+    *c = '\0';
+	char name[100]="TpsCalcul";
+	strcat(name,nomfic);
+	strcat(name,".txt");
+	FILE * fe = fopen(name, "w");
 
 	//Initialisation des variables et fermeture du fichier de lecture
 	clock_t tpsInit;

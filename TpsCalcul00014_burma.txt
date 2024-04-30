@@ -1,0 +1,7 @@
+Comparaisons de calcul :
+Temps de calcul pour les listes chaînées : 0.0090 millisecondes
+Temps de calcul pour les tables de hachage de taille 10 : 0.0070 millisecondes
+Temps de calcul pour les tables de hachage de taille 100 : 0.0060 millisecondes
+Temps de calcul pour les tables de hachage de taille 1000 : 0.0170 millisecondes
+Temps de calcul pour les tables de hachage de taille 10000 : 0.0710 millisecondes
+Temps de calcul pour les arbres quaternaires : 0.0250 millisecondes
