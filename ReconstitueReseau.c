@@ -7,16 +7,16 @@
 #include "Hachage.h"
 #include "ArbreQuat.h"
 
-// Menu pour choisir la methode 
+// Menu pour choisir la méthode 
 void menu(){
-    printf("1 - Reconstitution du reseau par methode : LISTE\n");
-    printf("2 - Reconstitution du reseau par methode : TABLE DE HACHAGE \n");
-    printf("3 - Reconstitution du reseau par methode : ARBRE \n");
+    printf("1 - Reconstitution du réseau par la méthode : LISTE CHAINEE\n");
+    printf("2 - Reconstitution du réseau par la méthode : TABLE DE HACHAGE \n");
+    printf("3 - Reconstitution du réseau par la méthode : ARBRE QUATERNAIRE\n");
 }
 
 int main(int argc , char *argv[]){
-    if(argc != 3){
-        printf("Il faut 2 arguments : le nom du fichier .cha et le numéro de la methode.\n"); // "00014_burma.cha"
+    if(argc != 2){
+        printf("Il faut 1 argument : le nom du fichier d'extension .cha.\n");
         return 0;
     }
     char *nomfic = argv[1]; //fichier en argument
@@ -32,15 +32,16 @@ int main(int argc , char *argv[]){
     int stop = 1;
 	char buffer[256];
     menu();
-	printf("saisir l'action a effectuer.\n");
+	printf("\nSaisissez l'action (nombre entier) à effectuer.\n");
 	fgets(buffer, sizeof(int), stdin);
 	stop = atoi(buffer);
+    printf("\n");
 
     switch (stop){
     // cas des listes chaine
     case 1: ;
         Reseau * R = reconstitueReseauListe(chaines);
-        printf("Nombre de noeuds = %d Gamma = %d\n", R->nbNoeuds, R->gamma);
+        printf("Nombre de noeuds = %d\nGamma = %d\n", R->nbNoeuds, R->gamma);
 
         //Test de la question 1 de l'exercice 3
         int nbC = nbCommodites(R);
@@ -49,16 +50,16 @@ int main(int argc , char *argv[]){
 
         FILE * fe = fopen("test_exo3.res", "w");
         ecrireReseau(R, fe);
-        afficheReseauSVG(R, "affichagereseauListe");
+        afficheReseauSVG(R, "affichageReseauListe");
         fclose(fe);
 
         liberer_Reseau(R);
 
-        printf("Affichage du reseau dans le fichier html affichagereseauListe\n");
+        printf("Affichage du réseau dans le fichier html : affichageReseauListe\n");
         break;
     case 2 : ;
         R = reconstitueReseauHachage(chaines, 1000);
-        printf("Nombre de noeuds = %d Gamma = %d\n", R->nbNoeuds, R->gamma);
+        printf("Nombre de noeuds = %d\nGamma = %d\n", R->nbNoeuds, R->gamma);
 
         //Test de la question 1 de l'exercice 3 
         nbC = nbCommodites(R);
@@ -67,15 +68,15 @@ int main(int argc , char *argv[]){
 
         fe = fopen("test_exo4.res", "w");
         ecrireReseau(R, fe);
-        afficheReseauSVG(R, "affichagereseauHachage");
+        afficheReseauSVG(R, "affichageReseauHachage");
         fclose(fe);
 
         liberer_Reseau(R);
-        printf("Affichage du reseau dans le fichier html affichagereseauHachage\n");
+        printf("Affichage du réseau dans le fichier html : affichageReseauHachage\n");
         break ;
     case 3 : ;
         R = reconstitueReseauArbre(chaines);
-        printf("Nombre de noeuds = %d Gamma = %d\n", R->nbNoeuds, R->gamma);
+        printf("Nombre de noeuds = %d\nGamma = %d\n", R->nbNoeuds, R->gamma);
 
         //Test de la question 1 de l'exercice 3 
         nbC = nbCommodites(R);
@@ -84,15 +85,15 @@ int main(int argc , char *argv[]){
 
         fe = fopen("test_exo5.res", "w");
         ecrireReseau(R, fe);
-        afficheReseauSVG(R, "affichagereseauArbre");
+        afficheReseauSVG(R, "affichageReseauArbre");
         fclose(fe);
 
         liberer_Reseau(R);
-        printf("Affichage du reseau dans le fichier html affichagereseauArbre\n");
+        printf("Affichage du réseau dans le fichier html : affichageReseauArbre\n");
         break ;
     
     default: ;
-        printf("veuillez suivre l'indication du menu");
+        printf("Veuillez suivre l'indication du menu.\n");
         break;
     }
 

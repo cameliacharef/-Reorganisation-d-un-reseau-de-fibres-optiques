@@ -11,7 +11,7 @@
 int main(int argc , char *argv[]){
 	//Ouverture du fichier de lecture
 	if(argc != 2){
-        printf("Il faut 1 argument : le nom du fichier .cha.\n"); // "00014_burma.cha"
+        printf("Il faut 1 argument : le nom du fichier .cha.\n");
         return 0;
     }
     char *nomfic = argv[1];
@@ -46,39 +46,8 @@ int main(int argc , char *argv[]){
 	fprintf(fe, "Temps de calcul pour les listes chaînées : %.4f millisecondes\n", tpsCalcul);
 
 	//2.Tables de hachage :
-	/*//- de taille 10 :
-	tpsInit = clock();
-	Reseau* reseauH10 = reconstitueReseauHachage(chaines, 10);
-	tpsFin = clock();
-
-	liberer_Reseau(reseauH10);
-
-	tpsCalcul = 1000 * ((double)(tpsFin - tpsInit)) / CLOCKS_PER_SEC;
-	fprintf(fe, "Temps de calcul pour les tables de hachage de taille 10 : %.4f millisecondes\n", tpsCalcul);
-
-	//- de taille 100 :
-	tpsInit = clock();
-	Reseau* reseauH100 = reconstitueReseauHachage(chaines, 100);
-	tpsFin = clock();
-
-	liberer_Reseau(reseauH100);
-
-	tpsCalcul = 1000 * ((double)(tpsFin - tpsInit)) / CLOCKS_PER_SEC;
-	fprintf(fe, "Temps de calcul pour les tables de hachage de taille 100 : %.4f millisecondes\n", tpsCalcul);
-
-	//- de taille 1000 :
-	tpsInit = clock();
-	Reseau* reseauH1000 = reconstitueReseauHachage(chaines, 1000);
-	tpsFin = clock(); 
-
-	liberer_Reseau(reseauH1000);
-
-	tpsCalcul = 1000 * ((double)(tpsFin - tpsInit)) / CLOCKS_PER_SEC;
-	fprintf(fe, "Temps de calcul pour les tables de hachage de taille 1000 : %.4f millisecondes\n", tpsCalcul);
-	*/
-	// Table de taille de table de hachage : ON parcourt le tableau pour varier la taille 
-	int taille_H[5] = {5, 10, 100, 1000, 10000};
-	for (int i = 0; i < 5; i++){
+	int taille_H[4] = {10, 100, 1000, 10000}; // Table contenant différentes tailles des tables de hachage
+	for (int i = 0; i < 4; i++){
 		tpsInit = clock();
 		Reseau* reseauH = reconstitueReseauHachage(chaines, taille_H[i]);
 		tpsFin = clock();
@@ -88,6 +57,7 @@ int main(int argc , char *argv[]){
 		tpsCalcul = 1000 * ((double)(tpsFin - tpsInit)) / CLOCKS_PER_SEC;
 		fprintf(fe, "Temps de calcul pour les tables de hachage de taille %d : %.4f millisecondes\n", taille_H[i], tpsCalcul);
 	}
+	
 	//3.Arbres quaternaires
 	tpsInit = clock();
 	Reseau* reseauAQ = reconstitueReseauArbre(chaines);
@@ -98,7 +68,7 @@ int main(int argc , char *argv[]){
 	tpsCalcul = 1000 * ((double)(tpsFin - tpsInit)) / CLOCKS_PER_SEC;
 	fprintf(fe,"Temps de calcul pour les arbres quaternaires : %.4f millisecondes\n", tpsCalcul);
 
-	//Fermeture du fichier d'écriture et libération des chaines
+	//Fermeture du fichier d'écriture et libération des chaînes
 	fclose(fe);
 	liberer_Chaines(chaines);
 
