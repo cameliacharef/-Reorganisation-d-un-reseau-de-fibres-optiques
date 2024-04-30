@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <assert.h>
+#include <string.h>
 #include "Chaine.h"
 #include "Reseau.h"
 #include "SVGwriter.h"
@@ -12,6 +13,7 @@ void menu(){
     printf("1 - Reconstitution du réseau par la méthode : LISTE CHAINEE\n");
     printf("2 - Reconstitution du réseau par la méthode : TABLE DE HACHAGE \n");
     printf("3 - Reconstitution du réseau par la méthode : ARBRE QUATERNAIRE\n");
+    printf("\n");
 }
 
 int main(int argc , char *argv[]){
@@ -20,7 +22,6 @@ int main(int argc , char *argv[]){
         return 0;
     }
     char *nomfic = argv[1]; //fichier en argument
-
     FILE * fl = fopen(nomfic, "r"); 
     if (fl == NULL) {
         printf("Error opening file\n");
@@ -36,9 +37,12 @@ int main(int argc , char *argv[]){
 	fgets(buffer, sizeof(int), stdin);
 	stop = atoi(buffer);
     printf("\n");
+    char* c = strchr(nomfic,'.'); //séparation de l'extension du nom du fichier
+    *c = '\0';
+    char name[100] = "";
 
     switch (stop){
-    // cas des listes chaine
+    // cas des listes chaînées
     case 1: ;
         Reseau * R = reconstitueReseauListe(chaines);
         printf("Nombre de noeuds = %d\nGamma = %d\n", R->nbNoeuds, R->gamma);
@@ -50,12 +54,13 @@ int main(int argc , char *argv[]){
 
         FILE * fe = fopen("test_exo3.res", "w");
         ecrireReseau(R, fe);
-        afficheReseauSVG(R, "affichageReseauListe");
+        strcat(name,"affichageReseauListe");
+        strcat(name,nomfic);
+        afficheReseauSVG(R, name);
         fclose(fe);
 
         liberer_Reseau(R);
-
-        printf("Affichage du réseau dans le fichier html : affichageReseauListe\n");
+        printf("Affichage du réseau dans le fichier html : %s\n",name);
         break;
     case 2 : ;
         R = reconstitueReseauHachage(chaines, 1000);
@@ -68,11 +73,13 @@ int main(int argc , char *argv[]){
 
         fe = fopen("test_exo4.res", "w");
         ecrireReseau(R, fe);
-        afficheReseauSVG(R, "affichageReseauHachage");
+        strcat(name,"affichageReseauHachage");
+        strcat(name,nomfic);
+        afficheReseauSVG(R, name);
         fclose(fe);
 
         liberer_Reseau(R);
-        printf("Affichage du réseau dans le fichier html : affichageReseauHachage\n");
+        printf("Affichage du réseau dans le fichier html : %s\n",name);
         break ;
     case 3 : ;
         R = reconstitueReseauArbre(chaines);
@@ -85,11 +92,13 @@ int main(int argc , char *argv[]){
 
         fe = fopen("test_exo5.res", "w");
         ecrireReseau(R, fe);
-        afficheReseauSVG(R, "affichageReseauArbre");
+        strcat(name,"affichageReseauArbre");
+        strcat(name,nomfic);
+        afficheReseauSVG(R, name);
         fclose(fe);
 
         liberer_Reseau(R);
-        printf("Affichage du réseau dans le fichier html : affichageReseauArbre\n");
+        printf("Affichage du réseau dans le fichier html : %s\n",name);
         break ;
     
     default: ;
@@ -99,8 +108,5 @@ int main(int argc , char *argv[]){
 
     liberer_Chaines(chaines);
 
-
     return 0;
-
-
 }
