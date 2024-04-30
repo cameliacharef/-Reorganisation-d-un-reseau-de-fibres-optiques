@@ -57,7 +57,7 @@ Graphe* creerGraphe(Reseau* r){
 			if(courant->nd->num < voisins->nd->num){
                 Arete* a = creerArete(courant->nd->num, voisins->nd->num);
                 insereArete(a,&(G->T_som[a->u - 1]->L_voisin)); // Ajout dans u
-                insereArete(a,&(G->T_som[a->v - 1]->L_voisin)); // Ajo
+                insereArete(a,&(G->T_som[a->v - 1]->L_voisin)); // Ajout dans v
 				 //Les arêtes sont incidentes au sommet i
 				
 			}
@@ -315,6 +315,7 @@ void afficher_graph(Graphe* g){ //affichage du graph pour dubuggage
     }
 }
 
+/*
 void libererCellAretes(Cellule_arete* c){
 	Cellule_arete* tmp;
 	while(c){
@@ -337,4 +338,51 @@ void libererGraphe(Graphe *G){
 	free(G->T_som);
 	free(G->T_commod);
 	free(G);
+}*/
+
+/*Liberation Sommet*/
+void libererSommet(Sommet *s){
+    if(s==NULL){ // deja liberé
+        return;
+    }
+
+    s->L_voisin = NULL;
+    free(s);
+}
+
+/*Liberation Cellule_arete*/
+void libererCellule_Arete(Cellule_arete *c){
+    if(c==NULL){ // deja liberé
+        return;
+    }
+
+    c->a = NULL;
+    c->suiv = NULL;
+
+    free(c);
+}
+
+void libererGraphe(Graphe* G){
+    if(G){
+        Sommet* s;
+        for (int i = 0; i < G->nbsom; i++){
+            s = G->T_som[i];
+            Cellule_arete* voisins = s->L_voisin;
+            Cellule_arete* tmp;
+            while(voisins){
+                /*Pour ne pas liberer 2 fois la meme arete, on verifie si nous allons la rencontrer plus tard ou pas*/
+                if ((voisins->a->u <= i && voisins->a->v <= s->num)){
+                    free(voisins->a);
+                }
+                tmp = voisins;
+                voisins = voisins->suiv;
+                libererCellule_Arete(tmp);
+            }
+            libererSommet(s);
+        }
+        free(G->T_som);
+        free(G->T_commod);
+        free(G); 
+    }
+    
 }
