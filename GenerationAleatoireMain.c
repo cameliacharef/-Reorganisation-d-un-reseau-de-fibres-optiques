@@ -16,10 +16,11 @@ int main(){
 
 	FILE * fe1 = fopen("tempsCalculGenAleatLC.txt", "w");
 	int nbChaines = 50;
+	int nbPoints = 100;
 
 	//Création du graphique des listes chainees
 	while(nbChaines <=500){
-		fprintf(fe1,"%d ",nbChaines);
+		fprintf(fe1,"%d ",nbPoints * nbChaines);
 		Chaines* chaines = generationAleatoire(nbChaines,100,500,500);
 
 		tpsInit = clock();
@@ -41,7 +42,7 @@ int main(){
 	FILE * fe2= fopen("tempsCalculGenAleatHAQ.txt", "w");
 	nbChaines = 50;
 	while(nbChaines <=500){
-		fprintf(fe2,"%d ",nbChaines);
+		fprintf(fe2,"%d ",nbPoints * nbChaines);
 		Chaines* chaines = generationAleatoire(nbChaines,100,500,500);
 
 		//Tables de hachage
