@@ -372,6 +372,7 @@ void supprimerChemin(Cellule_file* chemin){
     free(chemin);
 }
 
+/*Libere une file */
 void liberer_file(S_file* F){
 	while(!estFileVide(F)){
 		defile(F);
