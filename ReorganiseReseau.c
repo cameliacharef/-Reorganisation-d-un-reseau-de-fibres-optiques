@@ -20,7 +20,7 @@ int main(int argc, char** argv){
 
     Chaines* C = lectureChaines(f);
     fclose(f);
-    Reseau* R = reconstitueReseauArbre(C); // Nous utilisons les arbres quaternaires car c'est la méthode la plus rapide d'après l'exercice 6
+    Reseau* R = reconstitueReseauArbre(C); // Nous utilisons les arbres quaternaires car c'est la méthode la plus rapide d'après l'exercice 6.
 
     // Ex 7.1 
     /* Affichage du graphe */
@@ -52,7 +52,7 @@ int main(int argc, char** argv){
     
     printf("\nReorganisation du reseau :\n");
     // Ex 7.4 
-    int test = reorganiseReseau(R); //reorganisation du reseau qui va renvoye un vrai (1) ou faux(0)
+    int test = reorganiseReseau(R); //Réorganisation du reseau qui va renvoyer un vrai (1) ou faux (0)
 
     if(test == 0){
         printf("Le reseau n 'est pas optimise \n");
@@ -62,7 +62,7 @@ int main(int argc, char** argv){
     }
 
     
-    /*Libiration des structures*/
+    /*Libération des structures*/
     libererGraphe(G); 
     liberer_Reseau(R);
     liberer_Chaines(C);
