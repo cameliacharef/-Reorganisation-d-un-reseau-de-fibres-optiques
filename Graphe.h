@@ -39,16 +39,16 @@ Sommet * creerSommet(int num, double x, double y);
 void insereArete(Arete* a,Cellule_arete** c);
 Arete* creerArete(int u,int v);
 Graphe* creerGraphe(Reseau* r);
-
+void afficherChemin(Cellule_file* L, int u, int v);
 int plus_petit_nbChaine(Graphe* G, int u , int v);
 Cellule_file * chaine_arborescence(Graphe * G, int u , int  v);
 int reorganiseReseau(Reseau *r);
 void libererGraphe(Graphe* g);
 void libererListe(Cellule_file* liste);
-void ajoute_en_tete(Cellule_file* L, int val);
+void insererEnTeteFile(Cellule_file **f, int val);
 void liberer(Cellule_file *L);
 void afficher_graph(Graphe* g);
-
+void supprimerChemin(Cellule_file* chemin);
 
 
 # endif

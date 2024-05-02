@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <math.h>
+#include <limits.h>
 #include "Graphe.h"
 
 /*Alloue et crée une arête*/
@@ -149,13 +150,14 @@ void libererListe(Cellule_file* liste) {
     free(liste);
 }
 
-void ajoute_en_tete(Cellule_file* L, int val){
-	Cellule_file * nouvsom = (Cellule_file *)malloc(sizeof(Cellule_file));
-	nouvsom->val = val;
-	nouvsom->suiv = L;
-	L = nouvsom;
-}
+/* Inserer en tete de cellule_file */
+void insererEnTeteFile(Cellule_file **f, int val){
+  Cellule_file *nouv=(Cellule_file *) malloc(sizeof(Cellule_file));
+  nouv->val=val;
 
+  nouv->suiv=*f;
+  *f=nouv;
+}
 
 void liberer(Cellule_file *L){
 	Cellule_file *cour,*prec;
@@ -168,76 +170,90 @@ void liberer(Cellule_file *L){
 	free(L);
 }
 
-
+/*ALGO DE DJIKSTRA*/
 /*parcours en largeur pour trouver un chemin entre u et v , stocke l'arborescence des chemins issus du sommet u*/
-Cellule_file * chaine_arborescence(Graphe * G, int u , int  v){
-	if (u == v){
-        return NULL ; // le chemin nulle 
-    }
-	int distance[G->nbsom]; // stocker les distances de chaque sommet
-    int visite[G->nbsom]; // sommets visités
-    int sommet_precedant[G->nbsom]; //on creer un tableau pour avoir le sommet precedent de chaque sommet
+Cellule_file * chaine_arborescence(Graphe * g, int u , int  v){
+// verifier si u et v sont identique
+    if (u == v)
+        return NULL;
 
-    // Initialisation des tableaux de distances et de visite
-    for (int i = 0; i < G->nbsom; i++) {
-        distance[i] = -1; // Initialiser les distances à -1
-        visite[i] = 0; // Aucun sommet n'a été visité
-        sommet_precedant[i] = -1;
-    }
+    int tab_dist[g->nbsom];
+    int tab_visite[g->nbsom];
+    int tab_precedent[g->nbsom];
 
-	S_file * F  = (S_file*) malloc(sizeof(S_file));
-    Init_file(F);
-	visite[u - 1] = 1; // u deja visite
-	distance[u - 1] = 0; // u a u = 0
-    sommet_precedant[u-1] = -1; 
-	enfile(F, u); // ajout de u dans file F
-
-	while(!(estFileVide(F))){
-		int sommet = defile(F); // Retirer le sommet en tête de file
-
-		Cellule_arete * voisins = G->T_som[sommet - 1]->L_voisin;
-        while (voisins != NULL){
-			// le sommet voisin 
-			int sommet_voisin;
-			if(sommet == voisins->a->u){
-				sommet_voisin = voisins->a->v;
-			}
-			else {
-				sommet_voisin = voisins->a->u;
-			}
-			// si pas deja visite
-			if(visite[sommet_voisin - 1] == 0){
-				visite[sommet_voisin - 1] = 1; // On le visite;
-				enfile(F, sommet_voisin);
-				distance[sommet_voisin - 1] = distance[sommet - 1] + 1; // A chaque fois on rajoute 1 a distance
-                sommet_precedant[sommet_voisin - 1] = sommet; // Maj du predecesseur 
-			}
-			voisins = voisins->suiv;
-		}
-	}
-
-    // Initialiser chaine d'entier 
-    Cellule_file * chaine = NULL;
-
-    // Construction de la chaîne de u à v en utilisant les prédécesseurs
-    if(sommet_precedant[v - 1] == -1){
-        return chaine; //non connexe , si v pas de predecesseur retourne liste vide 
+    for (int i = 0; i < g->nbsom; i++) {
+        tab_dist[i] = INT_MAX;// Initialisation à l'infinit
+        tab_visite[i] = 0;// Aucun sommet n'a été visité
+        tab_precedent[i] = -1; //Aucun sommet n'a de prédécesseur
     }
 
-    int tmp_sommet = v; 
+    tab_dist[u-1] = 0; // Distance du nœud de départ est de 0
+    tab_precedent[u-1] = u;
+    while (1) {
+        int min_dist = INT_MAX;
+        int min_index = -1;
 
-    while (tmp_sommet != u){
-        ajoute_en_tete(chaine, tmp_sommet);
-        tmp_sommet = sommet_precedant[tmp_sommet -1];
+        // Recherche du nœud non visité avec la plus petite distance
+        for (int i = 0; i < g->nbsom; i++) {
+            if (!tab_visite[i] && tab_dist[i] < min_dist) {
+                min_dist = tab_dist[i];
+                min_index = i;
+            }
+        }
+
+        if (min_index == -1 || min_index == v-1) {
+            break; // Si tous les nœuds ont été visités ou si on a atteint le nœud d'arrivée, sortir de la boucle
+        }
+
+        tab_visite[min_index] = 1; // Marquer le nœud comme visité
+
+        // Mettre à jour les distances des nœuds voisins non visités
+        Cellule_arete* voisins = g->T_som[min_index]->L_voisin;
+        while (voisins != NULL) {
+            if (!tab_visite[voisins->a->v-1]) {
+                int temp_dist = tab_dist[min_index] + 1; 
+                if (temp_dist < tab_dist[voisins->a->v - 1]) {
+                    tab_dist[voisins->a->v - 1] = temp_dist;
+                    tab_precedent[voisins->a->v - 1] = min_index+1;
+                }
+            }
+            voisins = voisins->suiv;
+        }
     }
-    ajoute_en_tete(chaine, u);
+    // Chemin non trouve
+    if (tab_precedent[v - 1] == -1) {
+        return NULL;
+    }
 
-    liberer_file(F);
-
-    return chaine;
+    // Reconstruction du chemin
+    Cellule_file* chemin = NULL;
+    //insererEnTeteFile(&chemin, v);
+    int sommet = v;
+    while (sommet != u) {
+        insererEnTeteFile(&chemin, sommet);
+        sommet = tab_precedent[sommet - 1];
+    }
+    insererEnTeteFile(&chemin, u);
+    return chemin;
 }
 
 
+/* Afficher le chemin le plus court de u à v*/
+void afficherChemin(Cellule_file* L, int u, int v){
+    Cellule_file* tmp = L;
+    printf("Chemin de %d à %d:\n", u, v);
+    if (tmp == NULL){
+        printf("Pas de chemin trouvé\n");
+        return;
+    }
+    while (tmp){
+        printf("Sommet: %d \n", tmp->val);
+        tmp = tmp->suiv;
+    }
+    printf("\n\n");
+}
+
+/* Reorganiser le reseau à l'aiide d'un graphe */
 int reorganiseReseau(Reseau* r){
     /* on crée le graphe correspondant au réseau */
     Graphe* G = creerGraphe(r);
@@ -247,51 +263,52 @@ int reorganiseReseau(Reseau* r){
         return 0; // retourne faux
     }
 
-    /* on crée un matrice sommet-sommet pour compter le nombre de chaines passant par chaque arete */
-    int mat_som_som[G->nbsom][G->nbsom];
+    /* on crée une matrice pour compter le nombre de chaines passant par chaque arete */
+    int** mat_compte_chaines = (int**)malloc(sizeof(int*) * G->nbsom);
 	// Initialisation de la matrice à 0
 	for (int i = 0; i < G->nbsom; i++) {
-        for (int j = 0; j < G->nbsom; j++) {
-            mat_som_som[i][j] = 0;
-        }
-	}
-    /* on calcule la plus courte chaine pour chaque commodité */
+        mat_compte_chaines[i] = (int*)calloc(G->nbsom, sizeof(int)); //alloue et initialise a 0
+    }
+
+
+    /* on calcule la plus courte chaine pour chaque commodité , remplir matrice*/
     for (int i = 0; i < G->nbcommod; i++){
         Cellule_file * L = chaine_arborescence(G, G->T_commod[i].e1, G->T_commod[i].e2); // Plus courte chaine 
         int u, v;
 
-        Cellule_file * Lcour = L;
-        v = Lcour->val;
-        Lcour = Lcour->suiv;
-        while(Lcour){
-            u = v;
-            v = Lcour->val;
-			printf("Arête (%d, %d)\n", u, v);
-            mat_som_som[u-1][v-1]++; // On incrémente le nombre de chaînes passant par l'arête (u, v)
-            Lcour = Lcour->suiv;
+        // Incrémenter pour chaque arête dans le chemin
+        while(L && L->suiv){
+            u = L->val;
+            v = L->suiv->val;
+            mat_compte_chaines[u-1][v-1]++; // On incrémente le nombre de chaînes passant par l'arête (u, v)
+            mat_compte_chaines[v-1][u-1]++; // Les arêtes sont non orientées
+            L = L->suiv;
         }
-
-        liberer(L);
+        supprimerChemin(L);
     }
 
-    /* Affichage de la matrice pour le débogage */
-    printf("Matrice sommet-sommet :\n");
-    for (int i = 0; i < G->nbsom; i++) {
-        for (int j = 0; j < G->nbsom; j++) {
-            printf("%d ", mat_som_som[i][j]);
-        }
-        printf("\n");
-    }
     /* on retourne le res: vrai si gamma est garantie, false sinon */
     for (int i = 0; i < G->nbcommod; i++){
-        for (int j = 0; i < G->nbcommod; i++){
-            if (mat_som_som[i][j] >= G->gamma){ // Si le nombre de chaines passant par l'arete depasse gamma
+        for (int j = 0; j < G->nbcommod; j++){
+            if (mat_compte_chaines[i][j] >= G->gamma){ // Si le nombre de chaines passant par l'arete depasse gamma
+                // Libérer la mémoire allouée à la matrice 
+                for (int k = 0; k < G->nbsom; k++) { 
+                    free(mat_compte_chaines[k]);
+                }
+                free(mat_compte_chaines);
                 libererGraphe(G);
                 return 0; // retourne faux
             }
         }
     }
 
+    // Libérer la mémoire allouée à la matrice compteur_chaines
+    for (int i = 0; i < G->nbsom; i++) {
+        free(mat_compte_chaines[i]);
+    }
+    free(mat_compte_chaines);
+
+    // Libérer la mémoire allouée au graphe
     libererGraphe(G); 
     return 1; // retourne vrai gamma est garanti pour toutes les arêtes
 }
@@ -315,31 +332,6 @@ void afficher_graph(Graphe* g){ //affichage du graph pour dubuggage
     }
 }
 
-/*
-void libererCellAretes(Cellule_arete* c){
-	Cellule_arete* tmp;
-	while(c){
-		tmp=c;
-		free(tmp->a);
-		//free(tmp);
-		c=c->suiv;
-	}
-}
-
-void libererSommet(Sommet* s){
-	libererCellAretes(s->L_voisin);
-	free(s);
-}
-
-void libererGraphe(Graphe *G){
-	for(int i = 0; i < G->nbsom ; i++){
-		libererSommet(G->T_som[i]);
-	}
-	free(G->T_som);
-	free(G->T_commod);
-	free(G);
-}*/
-
 /*Liberation Sommet*/
 void libererSommet(Sommet *s){
     if(s==NULL){ // deja liberé
@@ -355,7 +347,6 @@ void libererCellule_Arete(Cellule_arete *c){
     if(c==NULL){ // deja liberé
         return;
     }
-
     c->a = NULL;
     c->suiv = NULL;
 
@@ -385,4 +376,14 @@ void libererGraphe(Graphe* G){
         free(G); 
     }
     
+}
+
+/* Suppression du chemin */
+void supprimerChemin(Cellule_file* chemin){
+    Cellule_file* tmp;
+    while (chemin != NULL) {
+        tmp = chemin;
+        chemin = chemin->suiv;
+        free(tmp);
+    }
 }
