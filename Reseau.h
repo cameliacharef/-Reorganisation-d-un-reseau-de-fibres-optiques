@@ -33,11 +33,20 @@ typedef struct {
 
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y);
 Reseau* reconstitueReseauListe(Chaines *C);
+
 void ecrireReseau(Reseau *R, FILE *f);
-CellNoeud * insererNoeud(CellNoeud * liste_noeuds, Noeud * nd_inserer);
+
 int nbLiaisons(Reseau *R);
 int nbCommodites(Reseau *R);
+
+/*Affichage*/
 void afficheReseauSVG(Reseau *R, char* nomInstance);
+
+/*Insertion*/
+CellNoeud * insererNoeud(CellNoeud * liste_noeuds, Noeud * nd_inserer);
+
+/*Libération*/
+void liberer_noeud(Noeud* nd);
 void liberer_CellNoeud(CellNoeud* liste_noeuds);
 void liberer_commodites(CellCommodite* commodites);
 void liberer_Reseau(Reseau* R);

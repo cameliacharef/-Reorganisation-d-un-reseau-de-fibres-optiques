@@ -80,11 +80,13 @@ Graphe* creerGraphe(Reseau* r){
 	return G;
 }
 
-void liberer_file(S_file* F){
-	while(!estFileVide(F)){
-		defile(F);
-	}
-	free(F);
+/* Inserer en tete de cellule_file */
+void insererEnTeteFile(Cellule_file **f, int val){
+  Cellule_file *nouv=(Cellule_file *) malloc(sizeof(Cellule_file));
+  nouv->val=val;
+
+  nouv->suiv=*f;
+  *f=nouv;
 }
 
 // Parcours en largeur 
@@ -140,35 +142,6 @@ int plus_petit_nbChaine(Graphe* G, int u , int v){
 	return -1; // si on trouves pas de chaine de u a v 
 }
 
-void libererListe(Cellule_file* liste) {
-    Cellule_file* temp;
-    while (liste != NULL) {
-        temp = liste;
-        liste = liste->suiv;
-        free(temp);
-    }
-    free(liste);
-}
-
-/* Inserer en tete de cellule_file */
-void insererEnTeteFile(Cellule_file **f, int val){
-  Cellule_file *nouv=(Cellule_file *) malloc(sizeof(Cellule_file));
-  nouv->val=val;
-
-  nouv->suiv=*f;
-  *f=nouv;
-}
-
-void liberer(Cellule_file *L){
-	Cellule_file *cour,*prec;
-	cour = L;
-	while(cour != NULL){
-		prec = cour;
-		cour = cour->suiv;
-		free(prec);
-	}
-	free(L);
-}
 
 /*ALGO DE DJIKSTRA*/
 /*parcours en largeur pour trouver un chemin entre u et v , stocke l'arborescence des chemins issus du sommet u*/
@@ -238,22 +211,9 @@ Cellule_file * chaine_arborescence(Graphe * g, int u , int  v){
 }
 
 
-/* Afficher le chemin le plus court de u à v*/
-void afficherChemin(Cellule_file* L, int u, int v){
-    Cellule_file* tmp = L;
-    printf("Chemin de %d à %d:\n", u, v);
-    if (tmp == NULL){
-        printf("Pas de chemin trouvé\n");
-        return;
-    }
-    while (tmp){
-        printf("Sommet: %d \n", tmp->val);
-        tmp = tmp->suiv;
-    }
-    printf("\n\n");
-}
 
-/* Reorganiser le reseau à l'aiide d'un graphe */
+
+/* Reorganiser le reseau à l'aide d'un graphe */
 int reorganiseReseau(Reseau* r){
     /* on crée le graphe correspondant au réseau */
     Graphe* G = creerGraphe(r);
@@ -266,14 +226,18 @@ int reorganiseReseau(Reseau* r){
     /* on crée une matrice pour compter le nombre de chaines passant par chaque arete */
     int** mat_compte_chaines = (int**)malloc(sizeof(int*) * G->nbsom);
 	// Initialisation de la matrice à 0
-	for (int i = 0; i < G->nbsom; i++) {
-        mat_compte_chaines[i] = (int*)calloc(G->nbsom, sizeof(int)); //alloue et initialise a 0
+	for (int i = 0; i < G->nbsom; i++) { //alloue et initialise a 0
+        mat_compte_chaines[i] = (int*)malloc(G->nbsom * sizeof(int)); 
+        for(int j = 0; j < G->nbsom; j++){
+            mat_compte_chaines[i][j] = 0;
+        }
     }
 
 
     /* on calcule la plus courte chaine pour chaque commodité , remplir matrice*/
+    Cellule_file * L = NULL;
     for (int i = 0; i < G->nbcommod; i++){
-        Cellule_file * L = chaine_arborescence(G, G->T_commod[i].e1, G->T_commod[i].e2); // Plus courte chaine 
+        L = chaine_arborescence(G, G->T_commod[i].e1, G->T_commod[i].e2); // Plus courte chaine 
         int u, v;
 
         // Incrémenter pour chaque arête dans le chemin
@@ -284,6 +248,7 @@ int reorganiseReseau(Reseau* r){
             mat_compte_chaines[v-1][u-1]++; // Les arêtes sont non orientées
             L = L->suiv;
         }
+        
         supprimerChemin(L);
     }
 
@@ -313,6 +278,8 @@ int reorganiseReseau(Reseau* r){
     return 1; // retourne vrai gamma est garanti pour toutes les arêtes
 }
 
+
+
 void afficher_graph(Graphe* g){ //affichage du graph pour dubuggage 
     int i ;
     for(i =  0  ; i < g->nbsom ; i++){
@@ -330,6 +297,21 @@ void afficher_graph(Graphe* g){ //affichage du graph pour dubuggage
     for(int j = 0 ; j < g->nbcommod ; j++){
         printf("Commodite %d du graph :(%d, %d) \n", j+1, tab_commod[j].e1, tab_commod[j].e2);
     }
+}
+
+/* Afficher le chemin le plus court de u à v*/
+void afficherChemin(Cellule_file* L, int u, int v){
+    Cellule_file* tmp = L;
+    printf("Chemin de %d à %d:\n", u, v);
+    if (tmp == NULL){
+        printf("Pas de chemin trouvé\n");
+        return;
+    }
+    while (tmp){
+        printf("Sommet: %d \n", tmp->val);
+        tmp = tmp->suiv;
+    }
+    printf("\n\n");
 }
 
 /*Liberation Sommet*/
@@ -353,6 +335,7 @@ void libererCellule_Arete(Cellule_arete *c){
     free(c);
 }
 
+/*liberation du graphe*/
 void libererGraphe(Graphe* G){
     if(G){
         Sommet* s;
@@ -386,4 +369,12 @@ void supprimerChemin(Cellule_file* chemin){
         chemin = chemin->suiv;
         free(tmp);
     }
+    free(chemin);
+}
+
+void liberer_file(S_file* F){
+	while(!estFileVide(F)){
+		defile(F);
+	}
+	free(F);
 }

@@ -42,6 +42,7 @@ int main(int argc , char *argv[]){
     char name[100] = "";
 
     switch (stop){
+        
     // cas des listes chaînées
     case 1: ;
         Reseau * R = reconstitueReseauListe(chaines);
@@ -62,6 +63,8 @@ int main(int argc , char *argv[]){
         liberer_Reseau(R);
         printf("Affichage du réseau dans le fichier html : %s\n",name);
         break;
+
+    // cas des tables de hachages
     case 2 : ;
         R = reconstitueReseauHachage(chaines, 1000);
         printf("Nombre de noeuds = %d\nGamma = %d\n", R->nbNoeuds, R->gamma);
@@ -81,6 +84,8 @@ int main(int argc , char *argv[]){
         liberer_Reseau(R);
         printf("Affichage du réseau dans le fichier html : %s\n",name);
         break ;
+
+    // cas des Arbres 
     case 3 : ;
         R = reconstitueReseauArbre(chaines);
         printf("Nombre de noeuds = %d\nGamma = %d\n", R->nbNoeuds, R->gamma);

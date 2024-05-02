@@ -32,23 +32,36 @@ typedef struct {
     Commod * T_commod ; /* Tableau des commodites */
 } Graphe ;
 
-void libererSommet(Sommet *s);
-void libererCellule_Arete(Cellule_arete *c);
-void libererGraphe(Graphe* G);
-Sommet * creerSommet(int num, double x, double y);
-void insereArete(Arete* a,Cellule_arete** c);
-Arete* creerArete(int u,int v);
-Graphe* creerGraphe(Reseau* r);
-void afficherChemin(Cellule_file* L, int u, int v);
 int plus_petit_nbChaine(Graphe* G, int u , int v);
 Cellule_file * chaine_arborescence(Graphe * G, int u , int  v);
 int reorganiseReseau(Reseau *r);
-void libererGraphe(Graphe* g);
-void libererListe(Cellule_file* liste);
-void insererEnTeteFile(Cellule_file **f, int val);
-void liberer(Cellule_file *L);
-void afficher_graph(Graphe* g);
+
+/*Creation*/
+Sommet * creerSommet(int num, double x, double y);
+Arete* creerArete(int u,int v);
+Graphe* creerGraphe(Reseau* r);
+
+/*Libération*/
+void libererSommet(Sommet *s);
+void libererCellule_Arete(Cellule_arete *c);
+void libererGraphe(Graphe* G);
 void supprimerChemin(Cellule_file* chemin);
+void liberer_file(S_file* F);
+
+/*Insertion*/
+void insereArete(Arete* a,Cellule_arete** c);
+void insererEnTeteFile(Cellule_file **f, int val);
+
+/*Affichage*/
+void afficher_graph(Graphe* g);
+void afficherChemin(Cellule_file* L, int u, int v);
+
+
+
+
+
+
+
 
 
 # endif

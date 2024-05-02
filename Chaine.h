@@ -30,15 +30,23 @@ double longueurTotale(Chaines *C);
 int comptePointsTotal(Chaines *C);
 
 // Les fonctions rajoutées
+
+int nombre_points(CellPoint * points);
+Chaines * generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ymax);
+
+/*Création*/
 CellPoint * creer_cellPoint(double x, double y);
 CellChaine * creer_cellChaine(int numero);
-int nombre_points(CellPoint * points);
 Chaines * creer_Chaines();
+
+/*Insertion*/
 void inserer_point(CellChaine * chaine, double x, double y);
 void inserer_cellChaine(Chaines * liste_chaines, CellChaine * chaine);
+
+/*Libération*/
 void liberer_cellPoint(CellPoint *point);
 void liberer_cellChaine(CellChaine *chaine);
 void liberer_Chaines(Chaines *chaines);
-Chaines * generationAleatoire(int nbChaines, int nbPointsChaine, int xmax, int ymax);
+
 
 #endif	

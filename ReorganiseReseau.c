@@ -39,15 +39,15 @@ int main(int argc, char** argv){
 
     u =  5, v = 11;
     printf("Le nombre d'arêtes du chemin le plus court de %d à %d est %d.\n\n", u, v, plus_petit_nbChaine(G, u, v));
-    L = chaine_arborescence(G, u, v);
-    afficherChemin(L, u, v);
-    supprimerChemin(L);
+    Cellule_file* L2 = chaine_arborescence(G, u, v);
+    afficherChemin(L2, u, v);
+    supprimerChemin(L2);
 
     u =  0, v = 0;
     printf("Le nombre d'arêtes du chemin le plus court de %d à %d est %d.\n\n", u, v, plus_petit_nbChaine(G, u, v));
-    L = chaine_arborescence(G, u, v);
-    afficherChemin(L, u, v);
-    supprimerChemin(L);
+    Cellule_file* L3 = chaine_arborescence(G, u, v);
+    afficherChemin(L3, u, v);
+    supprimerChemin(L3);
 
     
     printf("\nReorganisation du reseau :\n");
