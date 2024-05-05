@@ -240,13 +240,14 @@ int reorganiseReseau(Reseau* r){
         L = chaine_arborescence(G, G->T_commod[i].e1, G->T_commod[i].e2); // Plus courte chaine 
         int u, v;
 
+        Cellule_file * tmp = L;
         // Incrémenter pour chaque arête dans le chemin
-        while(L && L->suiv){
-            u = L->val;
-            v = L->suiv->val;
+        while(tmp && tmp->suiv){
+            u = tmp->val;
+            v = tmp->suiv->val;
             mat_compte_chaines[u-1][v-1]++; // On incrémente le nombre de chaînes passant par l'arête (u, v)
             mat_compte_chaines[v-1][u-1]++; // Les arêtes sont non orientées
-            L = L->suiv;
+            tmp = tmp->suiv;
         }
         
         supprimerChemin(L);
